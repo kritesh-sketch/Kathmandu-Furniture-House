@@ -12,6 +12,8 @@ public class Order {
     private String installationRequired;
     private String purpose;
     private String recommendation;
+    private String budgetRange;
+    private String notes;
     private Double amount;
     private String status;
 
@@ -114,6 +116,12 @@ public class Order {
     public void setRecommendation(String recommendation) {
         this.recommendation = recommendation;
     }
+
+    public String getBudgetRange()                    { return budgetRange; }
+    public void setBudgetRange(String budgetRange)    { this.budgetRange = budgetRange; }
+
+    public String getNotes()               { return notes; }
+    public void setNotes(String notes)     { this.notes = notes; }
 
     // getter and setter for Total bill produce
     public Double getAmount() { return amount; }

@@ -1,0 +1,138 @@
+/* ── HELP PAGE ── */
+.help-page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 56px 40px 80px;
+}
+
+.help-hero {
+    text-align: center;
+    margin-bottom: 56px;
+}
+
+.help-hero h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 10px;
+}
+
+.help-hero p {
+    font-size: 15px;
+    color: #707070;
+}
+
+/* ── SECTION TITLES ── */
+.help-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #111;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #111;
+}
+
+/* ── FAQ ── */
+.faq-list {
+    margin-bottom: 48px;
+}
+
+.faq-item {
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 18px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    font-family: inherit;
+}
+
+.faq-question span.faq-icon {
+    font-size: 20px;
+    font-weight: 300;
+    color: #888;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+}
+
+.faq-item.open .faq-icon {
+    transform: rotate(45deg);
+}
+
+.faq-answer {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.7;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s;
+    padding-bottom: 0;
+}
+
+.faq-item.open .faq-answer {
+    max-height: 300px;
+    padding-bottom: 18px;
+}
+
+/* ── CONTACT CARDS ── */
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 48px;
+}
+
+.contact-card {
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    padding: 24px 20px;
+    text-align: center;
+}
+
+.contact-card svg {
+    width: 28px;
+    height: 28px;
+    stroke: #111;
+    fill: none;
+    stroke-width: 1.5;
+    margin-bottom: 12px;
+}
+
+.contact-card h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 6px;
+}
+
+.contact-card p {
+    font-size: 13px;
+    color: #707070;
+    line-height: 1.6;
+}
+
+.contact-card a {
+    color: #111;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.contact-card a:hover { text-decoration: underline; }
+
+@media (max-width: 700px) {
+    .help-page { padding: 40px 20px 60px; }
+    .contact-grid { grid-template-columns: 1fr; }
+}

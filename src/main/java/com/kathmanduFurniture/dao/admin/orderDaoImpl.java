@@ -15,28 +15,28 @@ public class orderDaoImpl implements orderDao {
         Connection conn = null;
         try {
             conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-
+            PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1,  order.getFurnitureType());
             ps.setInt(2,     order.getQuantity());
             ps.setString(3,  order.getDesign());
             ps.setString(4,  order.getMaterial());
-            ps.setInt(5,  order.getSize());
-            ps.setString(6,  order.getDeliveryLocation());
-            ps.setString(7,  order.getDeadline());
-            ps.setString(8,  order.getInstallationRequired());
-            ps.setString(9, order.getPurpose());
-            ps.setString(10, order.getRecommendation());
-            ps.setString(11, order.getStatus());
+            ps.setInt(5,     order.getSize());
+            ps.setString(6,  order.getBudgetRange());
+            ps.setString(7,  order.getDeliveryLocation());
+            ps.setString(8,  order.getDeadline());
+            ps.setString(9,  order.getInstallationRequired());
+            ps.setString(10, order.getPurpose());
+            ps.setString(11, order.getNotes());
+            ps.setString(12, order.getStatus());
             ps.executeUpdate();
             return true;
 
         } catch (SQLException e) {
             System.out.println("Error placing order: " + e.getMessage());
-        }finally {
+        } finally {
             DatabaseConnection.closeConnection(conn);
         }
-        return true;
+        return false;
     }
 
     // SELECT BY ID
@@ -126,19 +126,21 @@ public class orderDaoImpl implements orderDao {
             statement.setString(3, order.getDesign());
             statement.setString(4, order.getMaterial());
             statement.setInt(5, order.getSize());
-            statement.setString(6, order.getDeliveryLocation());
-            statement.setString(7, order.getDeadline());
-            statement.setString(8, order.getInstallationRequired());
-            statement.setString(9, order.getPurpose());
-            statement.setString(10, order.getRecommendation());
-            statement.setString(11, order.getStatus());
+            statement.setString(6, order.getBudgetRange());
+            statement.setString(7, order.getDeliveryLocation());
+            statement.setString(8, order.getDeadline());
+            statement.setString(9, order.getInstallationRequired());
+            statement.setString(10, order.getPurpose());
+            statement.setString(11, order.getNotes());
+            statement.setString(12, order.getStatus());
+            statement.setInt(13, order.getId());
 
             statement.executeUpdate();
             return true;
 
         } catch (SQLException e) {
             System.out.println("Error updating order: " + e.getMessage());
-        }finally {
+        } finally {
             DatabaseConnection.closeConnection(conn);
         }
         return false;

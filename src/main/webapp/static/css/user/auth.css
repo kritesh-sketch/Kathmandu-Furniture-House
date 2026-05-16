@@ -1,0 +1,223 @@
+/* ── AUTH PAGE LAYOUT ── */
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    background: #fafafa;
+}
+
+.auth-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-logo {
+    display: block;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.auth-logo img {
+    height: 48px;
+    object-fit: contain;
+}
+
+.auth-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    text-align: center;
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+}
+
+.auth-subtitle {
+    font-size: 14px;
+    color: #707070;
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+/* ── ALERT ── */
+.auth-alert {
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 13.5px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.auth-alert.error {
+    background: #fff2f2;
+    border: 1px solid #ffc9c9;
+    color: #c0392b;
+}
+
+.auth-alert.success {
+    background: #f0fff4;
+    border: 1px solid #b2dfdb;
+    color: #1b7a4e;
+}
+
+/* ── FORM ── */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.auth-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.auth-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.auth-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    letter-spacing: 0.01em;
+}
+
+.auth-input,
+.auth-select {
+    padding: 11px 13px;
+    font-size: 14px;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    outline: none;
+    background: #fff;
+    color: #111;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.auth-input:focus,
+.auth-select:focus {
+    border-color: #111;
+}
+
+.auth-input::placeholder {
+    color: #aaa;
+}
+
+/* Password wrapper */
+.pw-wrap {
+    position: relative;
+}
+
+.pw-wrap .auth-input {
+    padding-right: 42px;
+}
+
+.pw-eye {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    color: #888;
+    display: flex;
+    align-items: center;
+}
+
+.pw-eye svg { width: 18px; height: 18px; }
+
+/* ── SUBMIT BUTTON ── */
+.auth-btn {
+    padding: 13px;
+    background: #111;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s;
+    margin-top: 4px;
+}
+
+.auth-btn:hover {
+    background: #333;
+}
+
+/* ── DIVIDER & FOOTER LINKS ── */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 4px 0;
+    color: #ccc;
+    font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e8e8e8;
+}
+
+.auth-footer {
+    text-align: center;
+    font-size: 13.5px;
+    color: #555;
+    margin-top: 20px;
+}
+
+.auth-footer a {
+    color: #111;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ── GENDER RADIO ── */
+.gender-group {
+    display: flex;
+    gap: 20px;
+    padding-top: 4px;
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+}
+
+.gender-option input[type="radio"] {
+    accent-color: #111;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .auth-card { padding: 36px 20px; }
+    .auth-row  { grid-template-columns: 1fr; }
+}

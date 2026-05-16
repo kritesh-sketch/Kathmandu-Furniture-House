@@ -12,5 +12,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.currentCssFile}.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.headerCssFile}.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.footerCssFile}.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/user/global.css" />
+    <style>body,html{background-color:#fff!important;color:#111;font-size:16px;font-weight:500}</style>
 </head>
 

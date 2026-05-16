@@ -12,7 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ProductServlet", value = "/products")
+@WebServlet(name = "ProductServlet", value = "/user/products")
 public class ProductServlet extends HttpServlet {
 
     private ProductDao productDao;
@@ -27,10 +27,12 @@ public class ProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         List<Product> products;
 
-        if (category != null && !category.isEmpty()) {
-            products = productDao.getProductsByCategory(category);
+        if (category != null && !category.trim().isEmpty()) {
+            products = productDao.getProductsByCategory(category.trim());
+            request.setAttribute("selectedCategory", category.trim());
         } else {
             products = productDao.getAllActiveProducts();
+            request.setAttribute("selectedCategory", "");
         }
 
         request.setAttribute("products", products);

@@ -71,9 +71,15 @@
 
             <div class="form-group">
               <label class="form-label" for="category">Category</label>
-              <input type="text" id="category" name="category" class="form-input"
-                     placeholder="e.g. Table & Desk"
-                     value="<c:out value='${product.category}'/>" />
+              <select id="category" name="category" class="form-input" required>
+                <option value="">-- Select Category --</option>
+                <option value="Sofas &amp; Seating"    ${product.category == 'Sofas & Seating'    ? 'selected' : ''}>Sofas &amp; Seating</option>
+                <option value="Beds &amp; Mattresses"  ${product.category == 'Beds & Mattresses'  ? 'selected' : ''}>Beds &amp; Mattresses</option>
+                <option value="Tables &amp; Desks"     ${product.category == 'Tables & Desks'     ? 'selected' : ''}>Tables &amp; Desks</option>
+                <option value="Chairs &amp; Stools"    ${product.category == 'Chairs & Stools'    ? 'selected' : ''}>Chairs &amp; Stools</option>
+                <option value="Decor &amp; Rugs"       ${product.category == 'Decor & Rugs'       ? 'selected' : ''}>Decor &amp; Rugs</option>
+                <option value="Storage &amp; Cabinets" ${product.category == 'Storage & Cabinets' ? 'selected' : ''}>Storage &amp; Cabinets</option>
+              </select>
             </div>
 
             <div class="form-group">

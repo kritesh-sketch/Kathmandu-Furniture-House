@@ -1,0 +1,83 @@
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<!doctype html>
+<html lang="en">
+<jsp:include page="/WEB-INF/templates/head.jsp">
+    <jsp:param name="title" value="Sign In — Kathmandu Furniture" />
+    <jsp:param name="pageFolder" value="user" />
+    <jsp:param name="currentCssFile" value="auth" />
+    <jsp:param name="headerCssFile" value="header" />
+    <jsp:param name="footerCssFile" value="footer" />
+</jsp:include>
+
+<body>
+
+<jsp:include page="/WEB-INF/templates/user/header.jsp" />
+
+<div class="auth-page">
+    <div class="auth-card">
+
+        <a href="${pageContext.request.contextPath}/user/home" class="auth-logo">
+            <img src="${pageContext.request.contextPath}/static/images/logo-2.png" alt="Kathmandu Furniture" />
+        </a>
+
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your account to continue.</p>
+
+        <%-- Success message after registration --%>
+        <c:if test="${param.registered == 'true'}">
+            <div class="auth-alert success">
+                Account created successfully! Your account is pending admin approval.
+            </div>
+        </c:if>
+
+        <%-- Error message --%>
+        <c:if test="${not empty error}">
+            <div class="auth-alert error"><c:out value="${error}"/></div>
+        </c:if>
+
+        <form class="auth-form" method="post" action="${pageContext.request.contextPath}/user/login">
+            <div class="auth-field">
+                <label class="auth-label" for="email">Email Address</label>
+                <input class="auth-input" type="email" id="email" name="email"
+                       placeholder="you@example.com"
+                       value="<c:out value='${emailValue}'/>" required />
+            </div>
+
+            <div class="auth-field">
+                <label class="auth-label" for="password">Password</label>
+                <div class="pw-wrap">
+                    <input class="auth-input" type="password" id="password" name="password"
+                           placeholder="Enter your password" required />
+                    <button type="button" class="pw-eye" onclick="togglePw('password', this)" aria-label="Show password">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="auth-btn">Sign In</button>
+        </form>
+
+        <div class="auth-footer">
+            Don&apos;t have an account?
+            <a href="${pageContext.request.contextPath}/user/join-us">Join Us</a>
+        </div>
+
+    </div>
+</div>
+
+<jsp:include page="/WEB-INF/templates/user/footer.jsp" />
+
+<script>
+    function togglePw(fieldId, btn) {
+        var input = document.getElementById(fieldId);
+        input.type = input.type === 'password' ? 'text' : 'password';
+    }
+</script>
+
+</body>
+</html>
+

@@ -32,9 +32,8 @@ public class dashboardDaoImpl implements dashboardDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT SUM(p.selling_price * s.quantity_sold) AS total_revenue " +
-                    "FROM sales s " +
-                    "JOIN products p ON s.product_id = p.id";
+            String sql = "SELECT SUM(s.selling_price * s.quantity_sold) AS total_revenue " +
+                    "FROM sales s";
 
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
@@ -61,9 +60,8 @@ public class dashboardDaoImpl implements dashboardDao {
         try{
             conn = DatabaseConnection.getConnection();
             String sql =
-                    "SELECT SUM(p.selling_price * s.quantity_sold) AS total_sales " +
+                    "SELECT SUM(s.selling_price * s.quantity_sold) AS total_sales " +
                             "FROM sales s " +
-                            "JOIN products p ON s.product_id = p.id " +
                             "WHERE DATE_FORMAT(s.sale_date, '%Y-%m') = ?";
             PreparedStatement statement = conn.prepareStatement(sql);
 //            statement.setString(1, month);
@@ -88,9 +86,8 @@ public class dashboardDaoImpl implements dashboardDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT COALESCE(SUM(p.selling_price * s.quantity_sold), 0) AS total " +
+            String sql = "SELECT COALESCE(SUM(s.selling_price * s.quantity_sold), 0) AS total " +
                     "FROM sales s " +
-                    "JOIN products p ON s.product_id = p.id " +
                     "WHERE DATE_FORMAT(s.sale_date, '%Y-%m') = ?";
 
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -198,7 +195,7 @@ public class dashboardDaoImpl implements dashboardDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS total_products FROM product";
+            String sql = "SELECT COUNT(*) AS total_products FROM products";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -223,7 +220,7 @@ public class dashboardDaoImpl implements dashboardDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT COUNT(*) AS active_products FROM product WHERE status='Active'";
+            String sql = "SELECT COUNT(*) AS active_products FROM products WHERE status='Active'";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
 
@@ -265,7 +262,7 @@ public class dashboardDaoImpl implements dashboardDao {
         try {
             conn = DatabaseConnection.getConnection();
             String sql = "SELECT COUNT(*) AS active_products " +
-                    "FROM product " +
+                    "FROM products " +
                     "WHERE status = 'Active' " +
                     "AND DATE_FORMAT(created_at, '%Y-%m') = ?";
 
@@ -368,7 +365,7 @@ public class dashboardDaoImpl implements dashboardDao {
         try {
             conn = DatabaseConnection.getConnection();
             String sql = "SELECT o.id AS order_number, " +
-                    "u.full_name AS customer_name, " +
+                    "CONCAT(u.firstName, ' ', u.lastName) AS customer_name, " +
                     "p.product_name, " +
                     "o.total_amount AS amount, " +
                     "o.status " +

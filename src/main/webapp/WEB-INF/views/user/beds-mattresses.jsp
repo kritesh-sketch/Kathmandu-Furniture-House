@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!doctype html>
 <html lang="en">
 <jsp:include page="/WEB-INF/templates/head.jsp">
-    <jsp:param name="title" value="All Products — Kathmandu Furniture" />
+    <jsp:param name="title" value="Beds &amp; Mattresses — Kathmandu Furniture" />
     <jsp:param name="pageFolder" value="user" />
     <jsp:param name="currentCssFile" value="products" />
     <jsp:param name="headerCssFile" value="header" />
@@ -43,7 +43,7 @@
                 </c:forEach>
             </c:when>
             <c:otherwise>
-                <div class="products-empty">No products available at the moment.</div>
+                <div class="products-empty">No products found in Beds &amp; Mattresses.</div>
             </c:otherwise>
         </c:choose>
     </div>
@@ -56,3 +56,4 @@
 </script>
 </body>
 </html>
+

@@ -10,8 +10,6 @@
     <jsp:param name="footerCssFile" value="footer" />
 </jsp:include>
 
-<!-- Add global.css manually since head.jsp doesn't support it -->
-<link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/user/global.css" />
 
 <body>
 
@@ -42,7 +40,7 @@
         <p class="hero-subheading">
             Crafted for Comfort. Designed for Life.
         </p>
-        <a href="#" class="hero-button">Shop</a>
+        <a href="${pageContext.request.contextPath}/user/products" class="hero-button">Shop</a>
     </div>
 </div>
 
@@ -73,19 +71,19 @@
     <div class="furniture-card">
         <img src="${pageContext.request.contextPath}/static/images/girl_on_sofa.png" alt="Living Room with Modern Sofa" class="furniture-image" />
         <div class="furniture-btn-container">
-            <a href="#" class="furniture-button">Shop Living Room</a>
+            <a href="${pageContext.request.contextPath}/user/sofas" class="furniture-button">Shop Living Room</a>
         </div>
     </div>
     <div class="furniture-card">
         <img src="${pageContext.request.contextPath}/static/images/girl_at_desk.png" alt="Chic Modern Dining" class="furniture-image" />
         <div class="furniture-btn-container">
-            <a href="#" class="furniture-button">Shop Dining</a>
+            <a href="${pageContext.request.contextPath}/user/tables" class="furniture-button">Shop Dining</a>
         </div>
     </div>
     <div class="furniture-card">
         <img src="${pageContext.request.contextPath}/static/images/girl_in_bedroom.png" alt="Elegant Modern Bedroom" class="furniture-image" />
         <div class="furniture-btn-container">
-            <a href="#" class="furniture-button">Shop Bedroom</a>
+            <a href="${pageContext.request.contextPath}/user/beds" class="furniture-button">Shop Bedroom</a>
         </div>
     </div>
 </section>
@@ -101,7 +99,7 @@
         <c:choose>
             <c:when test="${not empty spotlightProducts}">
                 <c:forEach var="product" items="${spotlightProducts}">
-                    <a href="#" class="spotlight-item">
+                    <a href="${pageContext.request.contextPath}/user/product-details?id=${product.id}" class="spotlight-item">
                         <img src="${pageContext.request.contextPath}/static/images/products/${product.image}" alt="${product.productName}">
                         <p>${product.productName}</p>
                     </a>

@@ -13,28 +13,26 @@ public class UserDaoImpl implements UserDao {
     @Override
     public boolean insertUser(User user) {
         if (findByEmail(user.getEmail()) != null) {
-            System.out.println("Email already exists: " + user.getEmail());
             return false;
         }
         if (findByPhoneNumber(user.getMobileNumber()) != null) {
-            System.out.println("Phone number already exists: " + user.getMobileNumber()); // Fixed
             return false;
         }
 
         Connection conn = null;
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "INSERT INTO users (firstName, lastName, email, mobile,password, dob) VALUES (?,?,?,?,?,?,?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, user.getFirstName());
-            statement.setString(2, user.getLastName());
-            statement.setString(3, user.getDob());
-            statement.setString(4, user.getGender());
-            statement.setString(5, user.getEmail());
-            statement.setString(6, user.getMobileNumber());
-            statement.setString(7, user.getPassword());
-            statement.executeUpdate();
-            return true;
+            String sql = "INSERT INTO users (firstName, lastName, email, phoneNumber, password, dob, gender, status) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, 'Pending')";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getMobileNumber());
+            ps.setString(5, user.getPassword());
+            ps.setString(6, user.getDob());
+            ps.setString(7, user.getGender());
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error inserting user: " + e.getMessage());
             return false;
@@ -49,22 +47,22 @@ public class UserDaoImpl implements UserDao {
         try {
             conn = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM users WHERE LOWER(email) = LOWER(?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, email);
-            ResultSet rs = statement.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("dob"),
-                        rs.getString("gender"),
-                        rs.getString("email"),
-                        rs.getString("phoneNumber"),
-                        rs.getString("password"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                user.setEmail(rs.getString("email"));
+                user.setMobileNumber(rs.getString("phoneNumber"));
+                user.setPassword(rs.getString("password"));
+                user.setDob(rs.getString("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setStatus(rs.getString("status"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                return user;
             }
         } catch (SQLException e) {
             System.out.println("Error finding user by email: " + e.getMessage());
@@ -74,36 +72,31 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-
     @Override
     public User findByPhoneNumber(String mobileNumber) {
         Connection conn = null;
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT * FROM users WHERE phoneNumber = (?)";
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setString(1, String.valueOf(mobileNumber));
-            ResultSet rs = statement.executeQuery();
+            String sql = "SELECT * FROM users WHERE phoneNumber = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, mobileNumber);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("dob"),
-                        rs.getString("gender"),
-                        rs.getString("email"),
-                        rs.getString("phoneNumber"),
-                        rs.getString("password"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                user.setEmail(rs.getString("email"));
+                user.setMobileNumber(rs.getString("phoneNumber"));
+                user.setPassword(rs.getString("password"));
+                user.setStatus(rs.getString("status"));
+                return user;
             }
         } catch (SQLException e) {
-            System.out.println("Error found during finding of user by phone number: " + e.getMessage());
+            System.out.println("Error finding user by phone: " + e.getMessage());
         } finally {
             DatabaseConnection.closeConnection(conn);
         }
         return null;
     }
-
 }
