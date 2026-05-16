@@ -1,0 +1,202 @@
+/* ── Account page layout ── */
+.account-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ── Avatar upload ── */
+.avatar-upload-wrap {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-bottom: 8px;
+}
+
+.profile-img {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border);
+  display: block;
+}
+
+.avatar-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.avatar-overlay i {
+  color: #fff;
+  font-size: 20px;
+}
+
+.avatar-upload-wrap:hover .avatar-overlay { opacity: 1; }
+
+/* ── Profile card ── */
+.profile-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  box-shadow: var(--sh);
+}
+
+.profile-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.profile-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--t1);
+}
+
+.profile-role {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-bg, #eef2ff);
+  padding: 3px 12px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.profile-meta {
+  width: 100%;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  color: var(--t3);
+}
+
+.meta-row i {
+  width: 16px;
+  color: var(--t4);
+  flex-shrink: 0;
+}
+
+/* ── Right panels ── */
+.account-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.account-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--sh);
+  overflow: hidden;
+}
+
+.account-panel-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.account-panel-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.account-panel-header h3 i {
+  color: var(--accent);
+}
+
+.account-panel-body {
+  padding: 24px;
+}
+
+/* ── Single-column form override ── */
+.form-grid.single-col {
+  grid-template-columns: 1fr;
+}
+
+.form-actions-inline {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ── Password toggle ── */
+.pw-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.pw-wrap .form-input {
+  padding-right: 40px;
+  width: 100%;
+}
+
+.pw-eye {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--t4);
+  padding: 0;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.pw-eye:hover { color: var(--t2); }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .account-grid { grid-template-columns: 1fr; }
+  .profile-card { flex-direction: row; text-align: left; gap: 20px; }
+  .profile-avatar { flex-shrink: 0; }
+  .profile-meta { margin-top: 4px; }
+}
+
+@media (max-width: 600px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .profile-card { flex-direction: column; text-align: center; }
+}

@@ -1,0 +1,332 @@
+/* Hero Content Styles */
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 96px);
+  /* Offset by header height */
+  display: flex;
+  overflow: hidden;
+  /* Prevent scrolling inside the hero container */
+}
+
+.video-column {
+  flex: 1;
+  height: 100%;
+  position: relative;
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  width: 100%;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hero-heading {
+  font-family: "Playfair Display", serif;
+  font-size: clamp(40px, 6vw, 100px);
+  line-height: 1.1;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.hero-subheading {
+  font-size: clamp(14px, 1.5vw, 18px);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin: 10px 0 30px 0;
+}
+
+.hero-button {
+  display: inline-block;
+  background-color: white;
+  color: #111;
+  text-decoration: none;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 16px;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.hero-button:hover {
+  background-color: #f0f0f0;
+  transform: scale(1.05);
+}
+
+/* Promotional Features Section */
+.features-section {
+  display: flex;
+  width: 100%;
+  height: 85vh;
+  min-height: 600px;
+}
+
+.feature-card {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.feature-card:hover .feature-image {
+  transform: scale(1.03);
+}
+
+.feature-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.feature-content {
+  position: absolute;
+  bottom: 80px;
+  left: 60px;
+  color: #fff;
+  z-index: 2;
+}
+
+.feature-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 10px 0;
+}
+
+.feature-title {
+  font-family: inherit;
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1.1;
+  margin: 0 0 32px 0;
+  letter-spacing: -0.5px;
+}
+
+.feature-button {
+  display: inline-block;
+  background-color: #fff;
+  color: #111;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: background-color 0.2s ease, opacity 0.2s ease;
+}
+
+.feature-button:hover {
+  background-color: #f5f5f5;
+  opacity: 0.9;
+}
+
+/* Furniture 3-Column Section */
+.furniture-section {
+  display: flex;
+  gap: 16px;
+  padding: 48px;
+  box-sizing: border-box;
+  background-color: #fff;
+  width: 100%;
+  height: 85vh;
+  min-height: 600px;
+}
+
+.furniture-card {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.furniture-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.furniture-card:hover .furniture-image {
+  transform: scale(1.03);
+}
+
+.furniture-btn-container {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+}
+
+.furniture-button {
+  display: inline-block;
+  background-color: #fff;
+  color: #111;
+  text-decoration: none;
+  padding: 10px 24px;
+  border-radius: 100px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.furniture-button:hover {
+  background-color: #f5f5f5;
+  transform: scale(1.02);
+}
+
+/* Spotlight Section */
+.spotlight-section {
+  padding: 80px 40px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.spotlight-header {
+  margin-bottom: 60px;
+}
+
+.spotlight-header h2 {
+  font-family: Impact, "Arial Black", sans-serif;
+  font-size: 72px;
+  font-weight: normal;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
+  line-height: 1;
+  color: #111;
+  letter-spacing: 1px;
+}
+
+.spotlight-header p {
+  font-size: 16px;
+  font-weight: 500;
+  color: #111;
+  margin: 0;
+}
+
+.spotlight-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 40px 12px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.spotlight-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.spotlight-item img {
+  width: 100%;
+  max-width: 70px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  margin-bottom: 8px;
+  transition: transform 0.2s ease;
+}
+
+.spotlight-item:hover img {
+  transform: translateY(-4px);
+}
+
+.spotlight-item p {
+  font-size: 11px;
+  font-weight: 600;
+  color: #111;
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 1200px) {
+  .spotlight-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .features-section {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .feature-card {
+    height: 60vh;
+  }
+
+  .feature-content {
+    bottom: 30px;
+    left: 30px;
+  }
+
+  .feature-title {
+    font-size: 32px;
+  }
+
+  .furniture-section {
+    flex-direction: column;
+    height: auto;
+    padding: 24px;
+  }
+
+  .furniture-card {
+    height: 60vh;
+  }
+}
+
+@media (max-width: 600px) {
+  .spotlight-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .spotlight-header h2 {
+    font-size: 48px;
+  }
+}
