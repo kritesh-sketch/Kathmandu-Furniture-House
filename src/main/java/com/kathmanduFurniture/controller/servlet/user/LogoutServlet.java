@@ -9,6 +9,10 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
+/**
+ * Handles logout for regular users at {@code /user/logout}.
+ * Clears the user session (loggedInUser, cart, wishlist) and redirects to login.
+ */
 @WebServlet(name = "UserLogoutServlet", value = "/user/logout")
 public class LogoutServlet extends HttpServlet {
 
@@ -17,6 +21,7 @@ public class LogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            // Remove all user-specific session attributes before invalidating
             session.removeAttribute("loggedInUser");
             session.removeAttribute("cart");
             session.removeAttribute("wishlist");

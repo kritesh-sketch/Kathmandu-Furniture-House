@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the user home page at {@code /user/home}.
+ * Loads the spotlight products shown in the hero/featured section.
+ */
 @WebServlet(name = "HomeServlet", value = "/user/home")
 public class HomeServlet extends HttpServlet {
 

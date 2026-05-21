@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the Chairs & Stools category page at {@code /user/chairs}.
+ * Delegates to {@link ProductDao#getFilteredProducts} with the category pre-set.
+ */
 @WebServlet(name = "ChairsServlet", value = "/user/chairs")
 public class ChairsServlet extends HttpServlet {
 

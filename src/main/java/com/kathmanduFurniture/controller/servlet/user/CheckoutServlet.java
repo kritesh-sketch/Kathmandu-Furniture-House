@@ -19,6 +19,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Servlet handling the checkout flow at {@code /user/checkout}.
+ *
+ * <p>GET — renders the checkout form with a summary of cart items.
+ * Redirects to /user/cart if the cart is empty.
+ * <p>POST — creates one Normal order row per cart item, then clears the
+ * session cart on success. On failure redirects with {@code ?error=true}.
+ */
 @WebServlet(name = "CheckoutServlet", value = "/user/checkout")
 public class CheckoutServlet extends HttpServlet {
 
@@ -81,13 +89,14 @@ public class CheckoutServlet extends HttpServlet {
         String deliveryLocation = request.getParameter("deliveryLocation");
         String paymentMethod    = request.getParameter("paymentMethod");
 
-        // Get logged-in user id from session
+        // Resolve customer id from session (0 means guest — should not reach here due to filter)
         Object loggedInUser = session.getAttribute("loggedInUser");
         int customerId = 0;
         if (loggedInUser instanceof com.kathmanduFurniture.entity.user.User) {
             customerId = ((com.kathmanduFurniture.entity.user.User) loggedInUser).getId();
         }
 
+        // Place one order row per cart item; track whether all inserts succeeded
         boolean success = true;
         for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
             Product p = productDao.getProductById(entry.getKey());
@@ -108,6 +117,7 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         if (success) {
+            // Clear cart only after all orders are confirmed inserted
             cart.clear();
             session.setAttribute("cart", cart);
             response.sendRedirect(request.getContextPath() + "/user/home?ordered=true");

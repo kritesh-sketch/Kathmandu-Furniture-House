@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the Decor & Rugs category page at {@code /user/decor}.
+ * Delegates to {@link ProductDao#getFilteredProducts} with the category pre-set.
+ */
 @WebServlet(name = "DecorServlet", value = "/user/decor")
 public class DecorServlet extends HttpServlet {
 

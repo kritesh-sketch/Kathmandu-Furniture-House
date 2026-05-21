@@ -14,6 +14,20 @@ import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Servlet for the admin warehouse storage management page at {@code /admin/storage}.
+ *
+ * <p>GET dispatches on the {@code action} parameter:
+ * <ul>
+ *   <li>{@code newLocation}  — renders the add-location form</li>
+ *   <li>{@code editLocation} — renders the edit-location form pre-filled with an existing record</li>
+ *   <li>{@code assign}       — renders the product-to-location assignment form</li>
+ *   <li>(default)            — renders the paginated locations/assignments list with optional search</li>
+ * </ul>
+ *
+ * <p>POST dispatches on the {@code action} parameter:
+ * createLocation, updateLocation, deleteLocation, createAssignment, deleteAssignment.
+ */
 @WebServlet(name = "StorageServlet", value = "/admin/storage")
 public class StorageServlet extends HttpServlet {
 
@@ -140,6 +154,7 @@ public class StorageServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/storage");
     }
 
+    /** Builds a StorageLocation from POST parameters. Does not set the id field. */
     private StorageLocation buildLocation(HttpServletRequest req) {
         StorageLocation loc = new StorageLocation();
         loc.setZone(param(req, "zone", ""));

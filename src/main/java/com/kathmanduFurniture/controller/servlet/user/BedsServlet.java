@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the Beds & Mattresses category page at {@code /user/beds}.
+ * Delegates to {@link ProductDao#getFilteredProducts} with the category pre-set.
+ */
 @WebServlet(name = "BedsServlet", value = "/user/beds")
 public class BedsServlet extends HttpServlet {
 

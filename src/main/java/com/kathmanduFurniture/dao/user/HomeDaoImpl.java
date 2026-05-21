@@ -10,11 +10,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of {@link HomeDao}.
+ * Fetches spotlight products with category name and aggregated color list.
+ */
 public class HomeDaoImpl implements HomeDao {
 
     @Override
     public List<Product> getSpotlightProducts() {
         List<Product> products = new ArrayList<>();
+        // GROUP_CONCAT aggregates color hex values into a comma-separated string (e.g. "#fff,#000")
         String sql =
             "SELECT p.id, p.product_name, p.image, p.price, p.availability, " +
             "       p.specifications, p.status, c.name AS category, p.rating, " +

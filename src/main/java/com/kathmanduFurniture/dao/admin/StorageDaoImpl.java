@@ -9,6 +9,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of {@link StorageDao}.
+ * Location queries include a SUM(sa.quantity) sub-aggregate so
+ * {@link com.kathmanduFurniture.entity.user.StorageLocation#getAssignedCount()}
+ * is always populated without a separate round-trip.
+ */
 public class StorageDaoImpl implements StorageDao {
 
     @Override

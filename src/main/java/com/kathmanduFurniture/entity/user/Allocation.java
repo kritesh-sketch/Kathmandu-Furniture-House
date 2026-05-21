@@ -3,25 +3,42 @@ package com.kathmanduFurniture.entity.user;
 import java.sql.Date;
 import java.sql.Timestamp;
 
+/**
+ * Entity class representing a furniture allocation record.
+ * An allocation tracks a product that has been issued to a user or department
+ * for internal use, along with expected and actual return dates.
+ * Maps to the {@code allocations} table.
+ * Status values: "Issued" | "Returned" | "Overdue"
+ */
 public class Allocation {
 
+    // Primary key
     private int     id;
+
+    // Product being allocated
     private int     productId;
-    private String  productName;
-    private String  productImage;
-    private String  productCategory;
+    private String  productName;    // populated via JOIN with products table
+    private String  productImage;   // product image path
+    private String  productCategory;// category name via JOIN
+
+    // Who the product is allocated to (either a user OR a department, not both)
     private Integer allocatedToUserId;
-    private String  allocatedToUserName;
-    private String  department;
+    private String  allocatedToUserName; // user's full name via JOIN
+    private String  department;          // used when allocating to a department instead of a user
+
+    // Allocation details
     private int     quantity;
     private Date    issueDate;
     private Date    expectedReturnDate;
-    private Date    actualReturnDate;
-    private String  status;   // Issued | Returned | Overdue
+    private Date    actualReturnDate;   // null until the item is returned
+    private String  status;             // Issued | Returned | Overdue
     private String  notes;
     private Timestamp createdAt;
 
+    // Default constructor
     public Allocation() {}
+
+    // ── Getters and Setters ──────────────────────────────────────────────────
 
     public int     getId()                          { return id; }
     public void    setId(int id)                    { this.id = id; }
@@ -38,6 +55,7 @@ public class Allocation {
     public String  getProductCategory()             { return productCategory; }
     public void    setProductCategory(String v)     { this.productCategory = v; }
 
+    // Nullable — null when allocation is to a department rather than a specific user
     public Integer getAllocatedToUserId()            { return allocatedToUserId; }
     public void    setAllocatedToUserId(Integer v)  { this.allocatedToUserId = v; }
 
@@ -68,6 +86,10 @@ public class Allocation {
     public Timestamp getCreatedAt()                 { return createdAt; }
     public void      setCreatedAt(Timestamp v)      { this.createdAt = v; }
 
+    /**
+     * Returns a display label for who the product is allocated to.
+     * Prefers the user's name if available; falls back to department; defaults to "—".
+     */
     public String getAllocatedTo() {
         if (allocatedToUserName != null && !allocatedToUserName.isEmpty()) return allocatedToUserName;
         if (department != null && !department.isEmpty()) return department;

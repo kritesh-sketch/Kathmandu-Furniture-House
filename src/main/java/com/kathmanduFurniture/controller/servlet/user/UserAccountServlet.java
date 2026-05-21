@@ -21,6 +21,17 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 
+/**
+ * Servlet for the user account/profile page at {@code /user/account}.
+ * Supports three POST actions dispatched via the {@code action} parameter:
+ * <ul>
+ *   <li>{@code profile}  — updates name, email, phone, DOB, gender</li>
+ *   <li>{@code password} — validates current password then sets a new BCrypt hash</li>
+ *   <li>{@code image}    — uploads a new profile photo via multipart form</li>
+ * </ul>
+ * All successful changes are also reflected in the session user object
+ * so the header/nav shows updated data without re-login.
+ */
 @WebServlet("/user/account")
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class UserAccountServlet extends HttpServlet {
@@ -42,11 +53,13 @@ public class UserAccountServlet extends HttpServlet {
             return;
         }
 
+        // Always re-fetch from DB so the page shows the latest data, not stale session data
         User user = userDao.findById(sessionUser.getId());
         if (user == null) user = sessionUser;
 
         req.setAttribute("user", user);
 
+        // Pre-split DOB (stored as "YYYY-MM-DD") for the three-dropdown date-of-birth widget
         if (user.getDob() != null && !user.getDob().isEmpty()) {
             try {
                 String[] parts = user.getDob().split("-");
@@ -61,6 +74,7 @@ public class UserAccountServlet extends HttpServlet {
         List<Order> orders = userDao.getOrdersByCustomerId(sessionUser.getId());
         req.setAttribute("orders", orders);
 
+        // Compute summary stats for the account dashboard cards
         int pending = 0, delivered = 0;
         double totalSpent = 0;
         for (Order o : orders) {

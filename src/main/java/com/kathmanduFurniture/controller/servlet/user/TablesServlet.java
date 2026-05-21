@@ -12,6 +12,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the Tables & Desks category page at {@code /user/tables}.
+ * Delegates to {@link ProductDao#getFilteredProducts} with the category pre-set.
+ */
 @WebServlet(name = "TablesServlet", value = "/user/tables")
 public class TablesServlet extends HttpServlet {
 

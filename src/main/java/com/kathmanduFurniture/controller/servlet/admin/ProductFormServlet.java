@@ -15,6 +15,14 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 
+/**
+ * Servlet for the admin add/edit product form at {@code /admin/product-form}.
+ * GET with no {@code id} renders the add form; GET with {@code ?id=N} renders
+ * the edit form pre-filled with the existing product and split dimension parts.
+ * POST determines add vs. edit from the {@code id} parameter, handles optional
+ * image upload, assembles a pipe-separated dimensions string, and delegates to
+ * {@link com.kathmanduFurniture.dao.admin.ProductDao}.
+ */
 @WebServlet(name = "ProductFormServlet", value = "/admin/product-form")
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class ProductFormServlet extends HttpServlet {
@@ -106,6 +114,7 @@ public class ProductFormServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/products?toast=" + toast);
     }
 
+    /** Returns the trimmed parameter value or {@code def} when absent/blank. */
     private static String param(HttpServletRequest req, String name, String def) {
         String v = req.getParameter(name);
         return (v != null && !v.isBlank()) ? v.trim() : def;

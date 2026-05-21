@@ -18,7 +18,7 @@
     <div class="auth-card" style="max-width:520px;">
 
         <a href="${pageContext.request.contextPath}/user/home" class="auth-logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo-2.png" alt="Kathmandu Furniture" />
+            <img src="${pageContext.request.contextPath}/static/images/kathmanduFurnitureLogo.png" alt="Kathmandu Furniture" />
         </a>
 
         <h1 class="auth-title">Create Your Account</h1>
@@ -92,7 +92,7 @@
                         </svg>
                     </button>
                 </div>
-                <small style="color:#888;font-size:12px;">Min 8 characters, uppercase, number &amp; special character (@$!%*?&amp;)</small>
+                <small style="color:#888;font-size:12px;">Min 8 characters, uppercase, number &amp; special character (@$!%*?&amp;#)</small>
             </div>
 
             <div class="auth-field">

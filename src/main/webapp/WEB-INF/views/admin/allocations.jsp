@@ -1,17 +1,17 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
 <!doctype html>
 <html lang="en">
 <head>
-  <jsp:include page="${pageContext.request.contextPath}/templates/admin/head-common.jsp"/>
-  <title>Allocations — Kathmandu Furniture Admin</title>
+  <jsp:include page="../../templates/admin/head-common.jsp"/>
+  <title>Allocations &mdash; Kathmandu Furniture Admin</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/admin/allocations.css"/>
 </head>
 <body>
 <div class="admin-layout">
-  <jsp:include page="${pageContext.request.contextPath}/templates/admin/sidebar.jsp">
+  <jsp:include page="../../templates/admin/sidebar.jsp">
     <jsp:param name="activePage" value="allocations"/>
   </jsp:include>
 
@@ -120,7 +120,7 @@
                         <c:when test="${not empty a.expectedReturnDate}">
                           <fmt:formatDate value="${a.expectedReturnDate}" pattern="dd MMM yyyy"/>
                         </c:when>
-                        <c:otherwise>—</c:otherwise>
+                        <c:otherwise>&mdash;</c:otherwise>
                       </c:choose>
                     </td>
                     <td class="col-status">
@@ -137,7 +137,7 @@
                       </c:choose>
                     </td>
                     <td class="col-act action-cell">
-                      <button class="dot-btn" onclick="toggleAlDD(event,'${a.id}')">⋯</button>
+                      <button class="dot-btn" onclick="toggleAlDD(event,'${a.id}')">â‹¯</button>
                       <div class="al-dropdown" id="ald_${a.id}">
                         <c:if test="${a.status != 'Returned'}">
                           <form class="al-dd-form" method="post"
@@ -178,12 +178,12 @@
       </div>
 
       <%-- Pagination --%>
-      <c:url var="prevUrl" value="${pageContext.request.contextPath}/admin/allocations">
+      <c:url var="prevUrl" value="/admin/allocations">
         <c:param name="search" value="${search}"/>
         <c:param name="status" value="${status}"/>
         <c:param name="page"   value="${currentPage - 1}"/>
       </c:url>
-      <c:url var="nextUrl" value="${pageContext.request.contextPath}/admin/allocations">
+      <c:url var="nextUrl" value="/admin/allocations">
         <c:param name="search" value="${search}"/>
         <c:param name="status" value="${status}"/>
         <c:param name="page"   value="${currentPage + 1}"/>
@@ -240,10 +240,10 @@
 
   (function() {
     var msgs = {
-      created:  ["✅","Allocation created successfully."],
-      returned: ["✅","Marked as returned."],
-      deleted:  ["🗑️","Allocation deleted."],
-      error:    ["❌","Something went wrong. Please try again."]
+      created:  ["âœ…","Allocation created successfully."],
+      returned: ["âœ…","Marked as returned."],
+      deleted:  ["ðŸ—‘ï¸","Allocation deleted."],
+      error:    ["âŒ","Something went wrong. Please try again."]
     };
     var key = document.getElementById("alToast").dataset.toast || "";
     if (msgs[key]) {

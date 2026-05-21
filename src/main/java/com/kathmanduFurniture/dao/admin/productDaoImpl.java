@@ -200,8 +200,9 @@ public class ProductDaoImpl implements ProductDao {
         return false;
     }
 
-    // ── helpers ──────────────────────────────────────────────────────────────
+    // ── Private helpers ──────────────────────────────────────────────────────
 
+    /** Looks up the category primary key by name; throws if the category doesn't exist. */
     private int getCategoryId(Connection conn, String categoryName) throws SQLException {
         PreparedStatement ps = conn.prepareStatement("SELECT id FROM categories WHERE name = ?");
         ps.setString(1, categoryName);
@@ -210,6 +211,7 @@ public class ProductDaoImpl implements ProductDao {
         throw new SQLException("Category not found: " + categoryName);
     }
 
+    /** Inserts comma-separated color hex values into product_colors as a batch. */
     private void insertColors(Connection conn, int productId, String colors) throws SQLException {
         if (colors == null || colors.trim().isEmpty()) return;
         PreparedStatement ps = conn.prepareStatement(

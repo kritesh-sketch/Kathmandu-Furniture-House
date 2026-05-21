@@ -2,18 +2,35 @@ package com.kathmanduFurniture.entity.user;
 
 import java.sql.Timestamp;
 
+/**
+ * Entity class representing a physical storage location in the warehouse.
+ * Maps to the {@code storage_locations} table.
+ * Products are assigned to locations via {@link StorageAssignment}.
+ * Status values: "Available" | "Full" | "Inactive"
+ */
 public class StorageLocation {
 
+    // Primary key
     private int    id;
-    private String zone;
-    private String rackNumber;
-    private String description;
-    private int    capacity;
-    private String status;       // Available | Full | Inactive
-    private Timestamp createdAt;
-    private int    assignedCount; // sum of quantities assigned to this location
 
+    // Location identifiers
+    private String zone;        // high-level area, e.g. "Zone A", "Warehouse-2"
+    private String rackNumber;  // specific rack within the zone, e.g. "R-01"
+    private String description; // optional free-text description of the location
+
+    // Capacity management
+    private int    capacity;       // maximum number of items the location can hold
+    private String status;         // Available | Full | Inactive
+    private Timestamp createdAt;
+
+    // Computed field: sum of quantities from all assignments to this location
+    // populated by a SUM(sa.quantity) in the SQL query, not stored in the table
+    private int    assignedCount;
+
+    // Default constructor
     public StorageLocation() {}
+
+    // ── Getters and Setters ──────────────────────────────────────────────────
 
     public int       getId()                        { return id; }
     public void      setId(int id)                  { this.id = id; }
@@ -36,8 +53,12 @@ public class StorageLocation {
     public Timestamp getCreatedAt()                 { return createdAt; }
     public void      setCreatedAt(Timestamp v)      { this.createdAt = v; }
 
+    // Total items currently assigned to this location (aggregated in the query)
     public int       getAssignedCount()             { return assignedCount; }
     public void      setAssignedCount(int v)        { this.assignedCount = v; }
 
+    /**
+     * Returns a combined "Zone / Rack" label for display in the admin UI.
+     */
     public String getLabel() { return zone + " / " + rackNumber; }
 }

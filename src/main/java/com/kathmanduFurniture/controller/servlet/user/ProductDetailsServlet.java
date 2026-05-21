@@ -2,10 +2,13 @@ package com.kathmanduFurniture.controller.servlet.user;
 
 import com.kathmanduFurniture.dao.admin.OrderDao;
 import com.kathmanduFurniture.dao.admin.OrderDaoImpl;
+import com.kathmanduFurniture.dao.user.FavoriteDao;
+import com.kathmanduFurniture.dao.user.FavoriteDaoImpl;
 import com.kathmanduFurniture.dao.user.ProductDao;
 import com.kathmanduFurniture.dao.user.ProductDaoImpl;
 import com.kathmanduFurniture.entity.user.Order;
 import com.kathmanduFurniture.entity.user.Product;
+import com.kathmanduFurniture.entity.user.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,9 +18,7 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Servlet for the product detail page at {@code /user/product-details}.
@@ -28,13 +29,15 @@ import java.util.Set;
 @WebServlet(name = "ProductDetailsServlet", value = "/user/product-details")
 public class ProductDetailsServlet extends HttpServlet {
 
-    private ProductDao productDao;
-    private OrderDao   orderDao;
+    private ProductDao  productDao;
+    private OrderDao    orderDao;
+    private FavoriteDao favoriteDao;
 
     @Override
     public void init() throws ServletException {
-        productDao = new ProductDaoImpl();
-        orderDao   = new OrderDaoImpl();
+        productDao  = new ProductDaoImpl();
+        orderDao    = new OrderDaoImpl();
+        favoriteDao = new FavoriteDaoImpl();
     }
 
     @Override
@@ -52,9 +55,10 @@ public class ProductDetailsServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/user/products");
                 return;
             }
+            // Check wishlist status from DB so it matches what the wishlist page shows
             HttpSession session = request.getSession(false);
-            Set<Integer> wishlist = session != null ? (Set<Integer>) session.getAttribute("wishlist") : null;
-            boolean inWishlist = wishlist != null && wishlist.contains(id);
+            User loggedInUser = session != null ? (User) session.getAttribute("loggedInUser") : null;
+            boolean inWishlist = loggedInUser != null && favoriteDao.isInWishlist(loggedInUser.getId(), id);
             request.setAttribute("product", product);
             request.setAttribute("inWishlist", inWishlist);
             request.getRequestDispatcher("/WEB-INF/views/user/product-details.jsp").forward(request, response);
@@ -93,12 +97,11 @@ public class ProductDetailsServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/user/cart");
 
         } else if ("toggleWishlist".equals(action)) {
-            @SuppressWarnings("unchecked")
-            Set<Integer> wishlist = (Set<Integer>) session.getAttribute("wishlist");
-            if (wishlist == null) wishlist = new HashSet<>();
-            if (wishlist.contains(productId)) wishlist.remove(productId);
-            else wishlist.add(productId);
-            session.setAttribute("wishlist", wishlist);
+            // Toggle in DB so the wishlist page (which reads from DB) stays in sync
+            User loggedInUser = (User) session.getAttribute("loggedInUser");
+            if (loggedInUser != null) {
+                favoriteDao.toggleWishlist(loggedInUser.getId(), productId);
+            }
             response.sendRedirect(request.getContextPath() + "/user/product-details?id=" + productId);
 
         } else if ("customOrder".equals(action)) {

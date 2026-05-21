@@ -2,16 +2,34 @@ package com.kathmanduFurniture.entity.user;
 
 import java.sql.Timestamp;
 
+/**
+ * Entity class representing a customer feedback submission.
+ * Maps to the {@code feedback} table.
+ * Status values: "Pending" (not yet reviewed) | "Reviewed" | "Resolved"
+ */
 public class Feedback {
+
+    // Primary key
     private int       id;
+
+    // Submitter details (entered on the help/contact form — not tied to a user account)
     private String    userName;
     private String    email;
+
+    // Feedback content
     private String    subject;
     private String    message;
+
+    // Workflow status managed by admins
     private String    status;
+
+    // Timestamp set automatically by the database on INSERT
     private Timestamp createdAt;
 
+    // Default constructor
     public Feedback() {}
+
+    // ── Getters and Setters ──────────────────────────────────────────────────
 
     public int       getId()                       { return id; }
     public void      setId(int id)                 { this.id = id; }

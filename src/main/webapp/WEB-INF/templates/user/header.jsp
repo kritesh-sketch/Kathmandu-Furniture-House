@@ -11,8 +11,8 @@
           <a href="${pageContext.request.contextPath}/user/logout">Sign Out</a>
         </c:when>
         <c:otherwise>
-          <a href="${pageContext.request.contextPath}/join-us">Join Us</a>
-          <a href="${pageContext.request.contextPath}/login">Sign In</a>
+          <a href="${pageContext.request.contextPath}/user/join-us">Join Us</a>
+          <a href="${pageContext.request.contextPath}/user/login">Sign In</a>
         </c:otherwise>
       </c:choose>
     </div>

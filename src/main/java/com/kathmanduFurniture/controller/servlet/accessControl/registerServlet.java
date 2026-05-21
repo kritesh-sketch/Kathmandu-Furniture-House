@@ -18,8 +18,12 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * Handles new user self-registration at {@code /join-us}.
- * GET renders the form with date-of-birth dropdown data.
+ * Legacy registration servlet at {@code /register} (accessControl package).
+ * This is an older form-based registration flow kept for backwards compatibility.
+ * The active registration servlet is {@link com.kathmanduFurniture.controller.servlet.user.RegisterServlet}
+ * at {@code /user/join-us}.
+ *
+ * <p>GET renders the form with month/day/year dropdown data for date of birth.
  * POST validates inputs, hashes the password, and persists the new account.
  */
 @WebServlet("/register")
@@ -31,6 +35,7 @@ public class RegisterServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
+        // Build dropdown data for the date-of-birth widget
         List<String> months = List.of(
                 "January","February","March","April","May","June",
                 "July","August","September","October","November","December"
@@ -38,6 +43,7 @@ public class RegisterServlet extends HttpServlet {
 
         List<Integer> days = IntStream.rangeClosed(1, 31).boxed().toList();
 
+        // Years run from 1920 to current year, newest first
         int currentYear = Year.now().getValue();
         List<Integer> years = IntStream.rangeClosed(1920, currentYear)
                 .boxed()
@@ -57,6 +63,7 @@ public class RegisterServlet extends HttpServlet {
                           HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Step 1: Read all form parameters
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
         String gender = request.getParameter("gender");
@@ -66,6 +73,7 @@ public class RegisterServlet extends HttpServlet {
         String birthMonth = request.getParameter("birthMonth");
         String birthDay = request.getParameter("birthDay");
         String birthYear = request.getParameter("birthYear");
+        // Assemble date-of-birth string from three separate dropdowns
         String dob = birthYear + "-" + birthMonth + "-" + birthDay;
 
         String email = null;
@@ -73,7 +81,7 @@ public class RegisterServlet extends HttpServlet {
 
         StringBuilder errors = new StringBuilder();
 
-        // Check if the first name field is empty and add an error message
+        // Step 2: Validate each field and accumulate error messages
         if (ValidationUtil.isNullOrEmpty(firstName)) {
             errors.append("First name cannot be empty. ");
         }
@@ -122,6 +130,7 @@ public class RegisterServlet extends HttpServlet {
             errors.append("Passwords do not match. ");
         }
 
+        // Step 3: Return early with all accumulated errors if any validation failed
         if (!errors.isEmpty()) {
             request.setAttribute("error", errors.toString().trim());
             request.getRequestDispatcher("/WEB-INF/views/authentication/register.jsp")
@@ -129,12 +138,12 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-
-
+        // Step 4: Hash password and build user entity
         String hashedPassword = PasswordUtil.getHashPassword(password);
 
+        User user = new User(firstName, lastName, dob, gender, email, mobile, hashedPassword);
 
-        User user = new User(firstName, lastName,dob,gender, email, mobile,hashedPassword);
+        // Step 5: Persist — DAO returns false if email/phone already exists
         boolean success = userDao.insertUser(user);
 
         if (!success) {
@@ -144,6 +153,7 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
+        // Step 6: Registration succeeded — redirect to login
         response.sendRedirect(request.getContextPath() + "/login");
     }
 }

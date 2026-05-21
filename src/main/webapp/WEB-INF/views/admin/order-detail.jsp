@@ -312,6 +312,13 @@
               <i class="fa-solid fa-receipt"></i> Order Summary
             </div>
             <div class="od-panel-body">
+              <c:if test="${not empty order.productImage}">
+                <div class="od-row" style="justify-content:center; padding:10px 0 14px;">
+                  <img src="${pageContext.request.contextPath}/static/images/${fn:escapeXml(order.productImage)}"
+                       alt="Product image"
+                       style="max-width:180px; max-height:160px; border-radius:8px; object-fit:cover; border:1px solid var(--border);"/>
+                </div>
+              </c:if>
               <c:if test="${not empty order.productName}">
                 <div class="od-row">
                   <span class="od-lbl">Product</span>

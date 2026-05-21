@@ -17,6 +17,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Servlet managing the session-based shopping cart at {@code /user/cart}.
+ *
+ * <p>The cart is stored in the session as {@code Map<Integer, Integer>}
+ * (productId → quantity) so it survives page navigation without a database.
+ *
+ * <p>GET  — builds a list of enriched cart items (product + qty + subtotal) and
+ * computes the order total for rendering in cart.jsp.
+ * <p>POST — dispatches on the {@code action} parameter:
+ * <ul>
+ *   <li>{@code add}    — adds qty units to an existing entry or creates one</li>
+ *   <li>{@code update} — replaces the qty; removes the entry if qty ≤ 0</li>
+ *   <li>{@code remove} — removes a single product entry</li>
+ *   <li>{@code clear}  — empties the entire cart</li>
+ * </ul>
+ */
 @WebServlet(name = "CartServlet", value = "/user/cart")
 public class CartServlet extends HttpServlet {
 
@@ -40,6 +56,7 @@ public class CartServlet extends HttpServlet {
         double total = 0;
 
         if (cart != null && !cart.isEmpty()) {
+            // Hydrate each cart entry with full product data for the view
             for (Map.Entry<Integer, Integer> entry : cart.entrySet()) {
                 Product p = productDao.getProductById(entry.getKey());
                 if (p != null) {
@@ -65,6 +82,7 @@ public class CartServlet extends HttpServlet {
         String idParam   = request.getParameter("productId");
         HttpSession session = request.getSession(true);
 
+        // Retrieve existing cart or start a fresh one
         @SuppressWarnings("unchecked")
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
         if (cart == null) cart = new LinkedHashMap<>();
@@ -73,11 +91,13 @@ public class CartServlet extends HttpServlet {
             int productId = Integer.parseInt(idParam);
 
             if ("add".equals(action)) {
+                // Merge into existing quantity (default to 1 if qty param is invalid)
                 int qty = 1;
                 try { qty = Integer.parseInt(request.getParameter("quantity")); } catch (Exception ignored) {}
                 cart.merge(productId, qty, Integer::sum);
 
             } else if ("update".equals(action)) {
+                // Replace quantity; remove item entirely if qty drops to 0 or below
                 int qty = 1;
                 try { qty = Integer.parseInt(request.getParameter("quantity")); } catch (Exception ignored) {}
                 if (qty <= 0) cart.remove(productId);

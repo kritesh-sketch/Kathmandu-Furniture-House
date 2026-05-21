@@ -5,13 +5,13 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <jsp:include page="${pageContext.request.contextPath}/templates/admin/head-common.jsp"/>
+  <jsp:include page="../../templates/admin/head-common.jsp"/>
   <title>Storage &amp; Rack Management — Kathmandu Furniture Admin</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/admin/storage.css"/>
 </head>
 <body>
 <div class="admin-layout">
-  <jsp:include page="${pageContext.request.contextPath}/templates/admin/sidebar.jsp">
+  <jsp:include page="../../templates/admin/sidebar.jsp">
     <jsp:param name="activePage" value="storage"/>
   </jsp:include>
 

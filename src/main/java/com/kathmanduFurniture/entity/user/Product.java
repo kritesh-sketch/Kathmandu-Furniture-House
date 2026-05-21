@@ -1,18 +1,29 @@
 package com.kathmanduFurniture.entity.user;
 
+/**
+ * Entity class representing a furniture product in the catalogue.
+ * Maps to the {@code products} table (with category resolved via JOIN to {@code categories}).
+ * Color swatches are stored as a comma-separated list of hex values in the {@code colors} field.
+ */
 public class Product {
 
+    // Primary key
     private int id;
+
+    // Core catalogue fields
     private String productName;
-    private String image;
+    private String image;           // relative path stored in the DB, e.g. "products/filename.jpg"
     private double price;
-    private String availability;
+    private String availability;    // In Stock | Out of Stock | Coming Soon
     private String description;
     private String specifications;
-    private String status;
-    private String category;
-    private String colors;               // comma-separated hex values e.g. "#8B4513,#D2691E,#F5DEB3"
-    private double rating;               // 0.0 – 5.0
+    private String status;          // Active | Inactive
+    private String category;        // resolved category name via JOIN to categories table
+
+    private String colors;               // comma-separated hex values e.g. "#8B4513,#D2691E"
+    private double rating;               // average rating 0.0 – 5.0
+
+    // Optional detailed product attributes
     private Integer seatingCapacity;
     private String  designStyle;
     private String  warrantyDetails;
@@ -20,16 +31,18 @@ public class Product {
     private String  installationService; // Yes / No / Optional
     private String  material;
     private String  frameMaterial;
-    private String  dimensions;          // e.g. "W120 × D85 × H90 cm"
+    private String  dimensions;          // stored as "L|B|H" pipe-separated values in cm
     private Double  weightKg;
-    private Integer maxWeightCapacity;   // kg
+    private Integer maxWeightCapacity;   // maximum load in kg
     private String  assemblyRequired;    // Yes / No
     private String  careInstructions;
 
-    // Default constructor
+    // Default constructor — used when populating from ResultSet
     public Product() {}
 
-    // Parameterized constructor
+    /**
+     * Constructor for basic product data used in list views and cart operations.
+     */
     public Product(int id, String productName, String image,
                    double price, String availability,
                    String specifications, String status, String category) {
@@ -43,7 +56,8 @@ public class Product {
         this.category       = category;
     }
 
-    // Getters and Setters
+    // ── Getters and Setters ──────────────────────────────────────────────────
+
     public int getId()                       { return id; }
     public void setId(int id)                { this.id = id; }
 
@@ -71,6 +85,7 @@ public class Product {
     public String getCategory()              { return category; }
     public void setCategory(String category) { this.category = category; }
 
+    // Comma-separated hex color swatches
     public String getColors()                { return colors; }
     public void setColors(String colors)     { this.colors = colors; }
 
@@ -98,6 +113,7 @@ public class Product {
     public String getFrameMaterial()                { return frameMaterial; }
     public void setFrameMaterial(String v)          { this.frameMaterial = v; }
 
+    // Dimensions stored as pipe-separated "L|B|H" for easy splitting in the form
     public String getDimensions()                   { return dimensions; }
     public void setDimensions(String v)             { this.dimensions = v; }
 

@@ -9,8 +9,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of {@link AllocationDao}.
+ * Uses a shared SELECT_COLS constant with JOINs to products, categories,
+ * and users so all queries return fully populated Allocation objects.
+ */
 public class AllocationDaoImpl implements AllocationDao {
 
+    // Base SELECT with JOINs; append WHERE clause as needed
     private static final String SELECT_COLS =
         "SELECT a.id, a.product_id, p.product_name, p.image AS product_image, " +
         "       c.name AS category, a.allocated_to_user_id, " +
@@ -200,6 +206,7 @@ public class AllocationDaoImpl implements AllocationDao {
         a.setProductName(rs.getString("product_name"));
         a.setProductImage(rs.getString("product_image"));
         a.setProductCategory(rs.getString("category"));
+        // allocated_to_user_id is nullable — use wasNull() to avoid mapping 0 as a real user id
         int uid = rs.getInt("allocated_to_user_id");
         if (!rs.wasNull()) a.setAllocatedToUserId(uid);
         a.setAllocatedToUserName(rs.getString("user_name"));

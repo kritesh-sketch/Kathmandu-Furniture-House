@@ -10,8 +10,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of {@link ProductDao}.
+ * Builds dynamic SQL for filtered queries; uses a shared SELECT_COLS + GROUP_BY
+ * constant pair so the column list is defined in one place.
+ */
 public class ProductDaoImpl implements ProductDao {
 
+    // Reusable column list with LEFT JOINs to categories and product_colors
     private static final String SELECT_COLS =
         "SELECT p.id, p.product_name, p.image, p.price, p.availability, " +
         "       p.description, p.specifications, p.status, c.name AS category, p.rating, p.created_at, " +
@@ -20,6 +26,7 @@ public class ProductDaoImpl implements ProductDao {
         "LEFT JOIN categories c  ON p.category_id = c.id " +
         "LEFT JOIN product_colors pc ON p.id = pc.product_id ";
 
+    // GROUP BY must list every non-aggregate SELECT column to satisfy ONLY_FULL_GROUP_BY
     private static final String GROUP_BY =
         " GROUP BY p.id, p.product_name, p.image, p.price, p.availability, " +
         "          p.description, p.specifications, p.status, c.name, p.rating, p.created_at";

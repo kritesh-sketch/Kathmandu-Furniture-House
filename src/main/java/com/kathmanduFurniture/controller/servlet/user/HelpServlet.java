@@ -8,6 +8,10 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Servlet for the help/contact page at {@code /user/help}.
+ * No data loading required — the JSP is a static contact form.
+ */
 @WebServlet(name = "HelpServlet", value = "/user/help")
 public class HelpServlet extends HttpServlet {
 

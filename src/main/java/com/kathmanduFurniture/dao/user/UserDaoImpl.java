@@ -12,6 +12,11 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of {@link UserDao}.
+ * Each method opens its own connection and closes it in a finally block;
+ * there is no connection pool — connections are per-request.
+ */
 public class UserDaoImpl implements UserDao {
 
     @Override

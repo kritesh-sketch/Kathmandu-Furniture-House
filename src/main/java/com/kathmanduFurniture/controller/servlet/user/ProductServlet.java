@@ -12,6 +12,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet for the all-products catalogue page at {@code /user/products}.
+ * Accepts optional query parameters: category, availability, sort,
+ * search, minPrice, maxPrice. Null/empty values disable the corresponding filter.
+ */
 @WebServlet(name = "ProductServlet", value = "/user/products")
 public class ProductServlet extends HttpServlet {
 

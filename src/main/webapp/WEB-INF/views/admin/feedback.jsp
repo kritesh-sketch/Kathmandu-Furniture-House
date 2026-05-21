@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
   <jsp:include page="../../templates/admin/head-common.jsp"/>
-  <title>Feedback — Kathmandu Furniture Admin</title>
+  <title>Feedback &mdash; Kathmandu Furniture Admin</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/admin/orders.css" />
 </head>
 <body>
@@ -27,7 +27,7 @@
       </header>
 
       <%-- Export URL --%>
-      <c:url var="exportUrl" value="${pageContext.request.contextPath}/admin/feedback">
+      <c:url var="exportUrl" value="/admin/feedback">
         <c:param name="export"   value="csv"/>
         <c:param name="search"   value="${search}"/>
         <c:param name="searchBy" value="${searchBy}"/>
@@ -107,7 +107,7 @@
                             <c:out value="${initials}"/>
                           </div>
                           <div>
-                            <span class="name-txt"><c:out value="${not empty fb.userName ? fb.userName : '—'}"/></span>
+                            <span class="name-txt"><c:out value="${not empty fb.userName ? fb.userName : '&mdash;'}"/></span>
                             <c:if test="${fn:toLowerCase(fb.status) == 'new'}">
                               <span style="display:inline-block;margin-left:6px;background:#ef4444;color:#fff;font-size:9px;font-weight:700;padding:1px 6px;border-radius:20px;vertical-align:middle;">NEW</span>
                             </c:if>
@@ -117,16 +117,16 @@
                       <td style="font-size:12.5px;">
                         <span class="trunc" style="max-width:140px;display:inline-block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom;"
                               title="<c:out value='${fb.email}'/>">
-                          <c:out value="${not empty fb.email ? fb.email : '—'}"/>
+                          <c:out value="${not empty fb.email ? fb.email : '&mdash;'}"/>
                         </span>
                       </td>
-                      <td style="font-size:12.5px;"><c:out value="${not empty fb.subject ? fb.subject : '—'}"/></td>
+                      <td style="font-size:12.5px;"><c:out value="${not empty fb.subject ? fb.subject : '&mdash;'}"/></td>
                       <td class="td-addr" style="font-size:12.5px;">
                         <c:choose>
                           <c:when test="${not empty fb.message and fn:length(fb.message) > 60}">
                             <c:out value="${fn:substring(fb.message, 0, 60)}"/>...
                           </c:when>
-                          <c:otherwise><c:out value="${not empty fb.message ? fb.message : '—'}"/></c:otherwise>
+                          <c:otherwise><c:out value="${not empty fb.message ? fb.message : '&mdash;'}"/></c:otherwise>
                         </c:choose>
                       </td>
                       <td style="white-space:nowrap;font-size:12.5px;color:var(--t3);">
@@ -134,7 +134,7 @@
                           <c:when test="${not empty fb.createdAt}">
                             <fmt:formatDate value="${fb.createdAt}" pattern="dd MMM yyyy"/>
                           </c:when>
-                          <c:otherwise>—</c:otherwise>
+                          <c:otherwise>&mdash;</c:otherwise>
                         </c:choose>
                       </td>
                       <td>
@@ -162,13 +162,13 @@
         </div>
 
         <%-- Pagination --%>
-        <c:url var="prevUrl" value="${pageContext.request.contextPath}/admin/feedback">
+        <c:url var="prevUrl" value="/admin/feedback">
           <c:param name="search"   value="${search}"/>
           <c:param name="searchBy" value="${searchBy}"/>
           <c:param name="status"   value="${status}"/>
           <c:param name="page"     value="${currentPage - 1}"/>
         </c:url>
-        <c:url var="nextUrl" value="${pageContext.request.contextPath}/admin/feedback">
+        <c:url var="nextUrl" value="/admin/feedback">
           <c:param name="search"   value="${search}"/>
           <c:param name="searchBy" value="${searchBy}"/>
           <c:param name="status"   value="${status}"/>

@@ -1,11 +1,11 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c"   uri="jakarta.tags.core" %>
 <%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
 <!doctype html>
 <html lang="en">
 <head>
   <jsp:include page="../../templates/admin/head-common.jsp"/>
-  <title>Orders — Kathmandu Furniture Admin</title>
+  <title>Orders &mdash; Kathmandu Furniture Admin</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/admin/orders.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
       </header>
 
       <%-- Export URL --%>
-      <c:url var="exportUrl" value="${pageContext.request.contextPath}/admin/orders">
+      <c:url var="exportUrl" value="/admin/orders">
         <c:param name="export"   value="csv"/>
         <c:param name="search"   value="${search}"/>
         <c:param name="searchBy" value="${searchBy}"/>
@@ -118,17 +118,17 @@
                       <td class="td-name">
                         <div class="name-cell">
                           <div class="order-avatar"><c:out value="${initials}"/></div>
-                          <span class="name-txt"><c:out value="${not empty o.fullName ? o.fullName : '—'}"/></span>
+                          <span class="name-txt"><c:out value="${not empty o.fullName ? o.fullName : '&mdash;'}"/></span>
                         </div>
                       </td>
                       <td style="font-family:'Courier New',monospace;font-size:12px;">
-                        <c:out value="${not empty o.phoneNumber ? o.phoneNumber : '—'}"/>
+                        <c:out value="${not empty o.phoneNumber ? o.phoneNumber : '&mdash;'}"/>
                       </td>
                       <td class="td-addr" style="font-size:12.5px;">
-                        <c:out value="${not empty o.deliveryLocation ? o.deliveryLocation : '—'}"/>
+                        <c:out value="${not empty o.deliveryLocation ? o.deliveryLocation : '&mdash;'}"/>
                       </td>
-                      <td><c:out value="${not empty o.furnitureType ? o.furnitureType : '—'}"/></td>
-                      <td style="font-weight:700;color:var(--t1);">${o.quantity > 0 ? o.quantity : '—'}</td>
+                      <td><c:out value="${not empty o.furnitureType ? o.furnitureType : '&mdash;'}"/></td>
+                      <td style="font-weight:700;color:var(--t1);">${o.quantity > 0 ? o.quantity : '&mdash;'}</td>
                       <td>
                         <c:choose>
                           <c:when test="${fn:toLowerCase(o.orderType) == 'customize'}">
@@ -137,10 +137,10 @@
                           <c:when test="${not empty o.orderType}">
                             <span class="type-badge normal"><c:out value="${o.orderType}"/></span>
                           </c:when>
-                          <c:otherwise><span style="color:var(--t4);">—</span></c:otherwise>
+                          <c:otherwise><span style="color:var(--t4);">&mdash;</span></c:otherwise>
                         </c:choose>
                       </td>
-                      <td style="font-size:12.5px;"><c:out value="${not empty o.paymentMethod ? o.paymentMethod : '—'}"/></td>
+                      <td style="font-size:12.5px;"><c:out value="${not empty o.paymentMethod ? o.paymentMethod : '&mdash;'}"/></td>
                       <td>
                         <a href="${pageContext.request.contextPath}/admin/orders?id=${o.id}" class="view-btn">
                           <i class="fa-regular fa-eye"></i> View
@@ -166,12 +166,12 @@
         </div>
 
         <%-- Pagination --%>
-        <c:url var="prevUrl" value="${pageContext.request.contextPath}/admin/orders">
+        <c:url var="prevUrl" value="/admin/orders">
           <c:param name="search" value="${search}"/><c:param name="searchBy" value="${searchBy}"/>
           <c:param name="status" value="${status}"/><c:param name="type" value="${type}"/>
           <c:param name="page"   value="${currentPage - 1}"/>
         </c:url>
-        <c:url var="nextUrl" value="${pageContext.request.contextPath}/admin/orders">
+        <c:url var="nextUrl" value="/admin/orders">
           <c:param name="search" value="${search}"/><c:param name="searchBy" value="${searchBy}"/>
           <c:param name="status" value="${status}"/><c:param name="type" value="${type}"/>
           <c:param name="page"   value="${currentPage + 1}"/>

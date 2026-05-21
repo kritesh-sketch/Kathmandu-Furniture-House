@@ -8,6 +8,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * JDBC implementation of {@link AdminAccountDao}.
+ * Reads and writes to the shared users table — the admin record is
+ * identified by its email matching the hard-coded admin address.
+ */
 public class AdminAccountDaoImpl implements AdminAccountDao {
 
     @Override

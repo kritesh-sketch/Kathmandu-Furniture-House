@@ -63,7 +63,7 @@
       </div>
 
       <%-- Export URL preserving filters --%>
-      <c:url var="exportUrl" value="${pageContext.request.contextPath}/admin/user-registration">
+      <c:url var="exportUrl" value="/admin/user-registration">
         <c:param name="export"   value="csv"/>
         <c:param name="search"   value="${search}"/>
         <c:param name="searchBy" value="${searchBy}"/>
@@ -256,14 +256,14 @@
         </div>
 
         <%-- Pagination --%>
-        <c:url var="prevUrl" value="${pageContext.request.contextPath}/admin/user-registration">
+        <c:url var="prevUrl" value="/admin/user-registration">
           <c:param name="search"   value="${search}"/>
           <c:param name="searchBy" value="${searchBy}"/>
           <c:param name="gender"   value="${gender}"/>
           <c:param name="status"   value="${status}"/>
           <c:param name="page"     value="${currentPage - 1}"/>
         </c:url>
-        <c:url var="nextUrl" value="${pageContext.request.contextPath}/admin/user-registration">
+        <c:url var="nextUrl" value="/admin/user-registration">
           <c:param name="search"   value="${search}"/>
           <c:param name="searchBy" value="${searchBy}"/>
           <c:param name="gender"   value="${gender}"/>

@@ -2,13 +2,25 @@ package com.kathmanduFurniture.entity.user;
 
 import java.sql.Timestamp;
 
+/**
+ * Entity class representing a customer order.
+ * Maps to the {@code orders} table. Supports two order types:
+ * <ul>
+ *   <li>"Normal"    — a standard product purchase from the catalogue</li>
+ *   <li>"Customize" — a custom furniture request with specifications</li>
+ * </ul>
+ */
 public class Order {
+
+    // Primary key
     private int id;
+
+    // Furniture/customization details (primarily used for Customize orders)
     private String furnitureType;
-    private int quantity;
+    private int    quantity;
     private String design;
     private String material;
-    private int size;
+    private int    size;
     private String deliveryLocation;
     private String deadline;
     private String installationRequired;
@@ -17,118 +29,70 @@ public class Order {
     private String budgetRange;
     private String description;
     private String notes;
-    private Double amount;
-    private String status;
+    private Double amount;      // general amount field
+    private String status;      // Pending | Confirmed | Processing | Delivered | Cancelled
 
-    // New order fields
+    // Customer contact fields (captured at order time, independent of user account)
     private String fullName;
     private String phoneNumber;
+
+    // Order classification and payment
     private String orderType;       // "Customize" or "Normal"
     private String paymentMethod;
+
+    // Custom dimensions for Customize orders
     private Double height;
     private Double width;
     private Double breadth;
 
-    // Extra DB fields
-    private Double      totalAmount;
-    private Timestamp   orderDate;
-    private int         productId;
-    private int         customerId;
+    // Standard DB fields from the orders table
+    private Double      totalAmount;  // total price at time of order
+    private Timestamp   orderDate;    // timestamp when order was placed
+    private int         productId;    // foreign key to products table
+    private int         customerId;   // foreign key to users table
 
-    // Reference image uploaded with a custom request
+    // Reference image path uploaded with a custom furniture request
     private String referenceImage;
 
-    // Dashboard-only fields (populated from JOIN queries)
-    private String customerName;
-    private String productName;
+    // Populated via JOIN queries (not stored in orders table)
+    private String customerName;  // resolved from users table
+    private String productName;   // resolved from products table
+    private String productImage;  // resolved from products table
 
-    // Getter and setter for order id
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
+    // ── Getters and Setters ──────────────────────────────────────────────────
 
-    // Getter and setter for furniture types
-    public String getFurnitureType() {
-        return furnitureType;
-    }
-    public void setFurnitureType(String furnitureType) {
-        this.furnitureType = furnitureType;
-    }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
-    // getter and setter for quantity
-    public int getQuantity() {
-        return quantity;
-    }
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
+    public String getFurnitureType() { return furnitureType; }
+    public void setFurnitureType(String furnitureType) { this.furnitureType = furnitureType; }
 
-    // Getter and setter for furniture design
-    public String getDesign() {
-        return design;
-    }
-    public void setDesign(String design) {
-        this.design = design;
-    }
+    public int getQuantity() { return quantity; }
+    public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    // Getter and setter for furniture material
-    public String getMaterial() {
-        return material;
-    }
-    public void setMaterial(String material) {
-        this.material = material;
-    }
+    public String getDesign() { return design; }
+    public void setDesign(String design) { this.design = design; }
 
-    // getter and setter for furniture items size
-    public int getSize() {
-        return size;
-    }
-    public void setSize(int size) {
-        this.size = size;
-    }
+    public String getMaterial() { return material; }
+    public void setMaterial(String material) { this.material = material; }
 
-    // Getter and setter for location to be deliver product
-    public String getDeliveryLocation() {
-        return deliveryLocation;
-    }
-    public void setDeliveryLocation(String deliveryLocation) {
-        this.deliveryLocation = deliveryLocation;
-    }
+    public int getSize() { return size; }
+    public void setSize(int size) { this.size = size; }
 
-    // getter and setter for instrument requried
-    public String getInstallationRequired() {
-        return installationRequired;
-    }
-    public void setInstallationRequired(String installationRequired) {
-        this.installationRequired = installationRequired;
-    }
+    public String getDeliveryLocation() { return deliveryLocation; }
+    public void setDeliveryLocation(String deliveryLocation) { this.deliveryLocation = deliveryLocation; }
 
-    // Getter and setter date to delivery product
-    public String getDeadline() {
-        return deadline;
-    }
-    public void setDeadline(String deadline) {
-        this.deadline = deadline;
-    }
+    public String getInstallationRequired() { return installationRequired; }
+    public void setInstallationRequired(String installationRequired) { this.installationRequired = installationRequired; }
 
-    // getter and setter for purpose of funiture items
-    public String getPurpose() {
-        return purpose;
-    }
-    public void setPurpose(String purpose) {
-        this.purpose = purpose;
-    }
+    public String getDeadline() { return deadline; }
+    public void setDeadline(String deadline) { this.deadline = deadline; }
 
-    // getter and setter for recommendation
-    public String getRecommendation() {
-        return recommendation;
-    }
-    public void setRecommendation(String recommendation) {
-        this.recommendation = recommendation;
-    }
+    public String getPurpose() { return purpose; }
+    public void setPurpose(String purpose) { this.purpose = purpose; }
+
+    public String getRecommendation() { return recommendation; }
+    public void setRecommendation(String recommendation) { this.recommendation = recommendation; }
 
     public String getBudgetRange()                    { return budgetRange; }
     public void setBudgetRange(String budgetRange)    { this.budgetRange = budgetRange; }
@@ -139,25 +103,21 @@ public class Order {
     public String getNotes()               { return notes; }
     public void setNotes(String notes)     { this.notes = notes; }
 
-    // getter and setter for Total bill produce
     public Double getAmount() { return amount; }
     public void setAmount(Double amount) { this.amount = amount; }
 
-    // getter and setter for status of order
-    public String getStatus() {
-        return status;
-    }
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    // Getter and setter for customer name (from JOIN)
+    // Fields populated from JOIN queries for display purposes
     public String getCustomerName() { return customerName; }
     public void setCustomerName(String customerName) { this.customerName = customerName; }
 
-    // Getter and setter for product name (from JOIN)
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
+
+    public String getProductImage() { return productImage; }
+    public void setProductImage(String productImage) { this.productImage = productImage; }
 
     public String getFullName()                  { return fullName; }
     public void setFullName(String fullName)     { this.fullName = fullName; }

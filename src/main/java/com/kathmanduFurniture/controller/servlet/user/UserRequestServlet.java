@@ -19,6 +19,13 @@ import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 
+/**
+ * Servlet for custom furniture order requests at {@code /user/request}.
+ * GET renders the request form, optionally pre-filling product details
+ * when a {@code productId} query parameter is provided (launched from a product page).
+ * POST collects all customisation fields (dimensions, material, design, etc.),
+ * handles an optional reference-image upload, and places a "Customize" order.
+ */
 @WebServlet(name = "UserRequestServlet", value = "/user/request")
 @MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class UserRequestServlet extends HttpServlet {
@@ -102,6 +109,7 @@ public class UserRequestServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/user/request?submitted=" + (ok ? "true" : "error"));
     }
 
+    /** Returns the trimmed parameter value, or {@code def} when absent/blank. */
     private String p(HttpServletRequest req, String name, String def) {
         String v = req.getParameter(name);
         return (v != null && !v.trim().isEmpty()) ? v.trim() : def;

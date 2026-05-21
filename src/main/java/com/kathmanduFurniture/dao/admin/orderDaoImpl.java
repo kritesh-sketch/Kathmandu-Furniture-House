@@ -11,6 +11,7 @@ import java.util.ArrayList;
  * Executes SQL against the orders table using prepared statements.
  */
 public class OrderDaoImpl implements OrderDao {
+    @Override
     public boolean placeOrder(Order order) {
         String sql = "INSERT INTO orders " +
                 "(full_name, phone_number, order_type, product_id, customer_id, " +
@@ -25,6 +26,7 @@ public class OrderDaoImpl implements OrderDao {
             ps.setString(1,  order.getFullName());
             ps.setString(2,  order.getPhoneNumber());
             ps.setString(3,  order.getOrderType() != null ? order.getOrderType() : "Normal");
+            // productId and customerId are nullable — Customize orders may have no linked product
             if (order.getProductId() > 0) ps.setInt(4, order.getProductId()); else ps.setNull(4, java.sql.Types.INTEGER);
             if (order.getCustomerId() > 0) ps.setInt(5, order.getCustomerId()); else ps.setNull(5, java.sql.Types.INTEGER);
             ps.setString(6,  order.getFurnitureType());
@@ -63,7 +65,7 @@ public class OrderDaoImpl implements OrderDao {
         "       o.size, o.height, o.width, o.budget_range, o.deadline, " +
         "       o.installation_required, o.purpose, o.description, o.notes, o.recommendation, " +
         "       o.status, o.order_date, " +
-        "       p.product_name " +
+        "       p.product_name, p.image AS product_image " +
         "FROM orders o " +
         "LEFT JOIN products p ON o.product_id = p.id ";
 
@@ -116,6 +118,7 @@ public class OrderDaoImpl implements OrderDao {
         o.setStatus(rs.getString("status"));
         o.setOrderDate(rs.getTimestamp("order_date"));
         o.setProductName(rs.getString("product_name"));
+        o.setProductImage(rs.getString("product_image"));
         try { o.setReferenceImage(rs.getString("reference_image")); } catch (SQLException ignored) {}
         return o;
     }

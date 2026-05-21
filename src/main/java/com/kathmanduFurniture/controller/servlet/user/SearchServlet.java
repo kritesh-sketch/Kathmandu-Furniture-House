@@ -13,6 +13,11 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Servlet for the product search page at {@code /user/search}.
+ * GET returns products matching the {@code q} query parameter.
+ * An empty query returns an empty result list rather than all products.
+ */
 @WebServlet(name = "SearchServlet", value = "/user/search")
 public class SearchServlet extends HttpServlet {
 
