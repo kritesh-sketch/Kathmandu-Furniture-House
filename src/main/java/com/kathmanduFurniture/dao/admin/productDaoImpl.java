@@ -7,19 +7,31 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class productDaoImpl implements productDao {
+/**
+ * JDBC implementation of {@link ProductDao}.
+ * Uses transactions for add/update to keep products and product_colors in sync.
+ */
+public class ProductDaoImpl implements ProductDao {
 
     private static final String SELECT_COLS =
         "SELECT p.id, p.product_name, p.image, p.price, p.availability, " +
-        "       p.specifications, p.status, c.name AS category, p.rating, " +
+        "       p.description, p.specifications, p.status, c.name AS category, p.rating, " +
+        "       p.seating_capacity, p.design_style, p.warranty_details, " +
+        "       p.return_policy, p.installation_service, " +
+        "       p.material, p.frame_material, p.dimensions, " +
+        "       p.weight_kg, p.max_weight_capacity, p.assembly_required, p.care_instructions, " +
         "       GROUP_CONCAT(pc.color_hex ORDER BY pc.id SEPARATOR ',') AS colors " +
         "FROM products p " +
-        "LEFT JOIN categories c     ON p.category_id = c.id " +
+        "LEFT JOIN categories c      ON p.category_id = c.id " +
         "LEFT JOIN product_colors pc ON p.id = pc.product_id ";
 
     private static final String GROUP_BY =
         " GROUP BY p.id, p.product_name, p.image, p.price, p.availability, " +
-        "          p.specifications, p.status, c.name, p.rating";
+        "          p.description, p.specifications, p.status, c.name, p.rating, " +
+        "          p.seating_capacity, p.design_style, p.warranty_details, " +
+        "          p.return_policy, p.installation_service, " +
+        "          p.material, p.frame_material, p.dimensions, " +
+        "          p.weight_kg, p.max_weight_capacity, p.assembly_required, p.care_instructions";
 
     @Override
     public List<Product> fetchAllProducts() {
@@ -67,16 +79,32 @@ public class productDaoImpl implements productDao {
 
             String prodSql =
                 "INSERT INTO products (product_name, image, price, availability, " +
-                "specifications, status, category_id, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                "description, specifications, status, category_id, rating, " +
+                "seating_capacity, design_style, warranty_details, return_policy, installation_service, " +
+                "material, frame_material, dimensions, weight_kg, max_weight_capacity, assembly_required, care_instructions) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(prodSql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getImage());
             ps.setDouble(3, product.getPrice());
             ps.setString(4, product.getAvailability());
-            ps.setString(5, product.getSpecifications());
-            ps.setString(6, product.getStatus());
-            ps.setInt(7, categoryId);
-            ps.setDouble(8, product.getRating());
+            ps.setString(5, product.getDescription());
+            ps.setString(6, product.getSpecifications());
+            ps.setString(7, product.getStatus());
+            ps.setInt(8, categoryId);
+            ps.setDouble(9, product.getRating());
+            if (product.getSeatingCapacity() != null) ps.setInt(10, product.getSeatingCapacity()); else ps.setNull(10, java.sql.Types.INTEGER);
+            ps.setString(11, product.getDesignStyle());
+            ps.setString(12, product.getWarrantyDetails());
+            ps.setString(13, product.getReturnPolicy());
+            ps.setString(14, product.getInstallationService() != null ? product.getInstallationService() : "No");
+            ps.setString(15, product.getMaterial());
+            ps.setString(16, product.getFrameMaterial());
+            ps.setString(17, product.getDimensions());
+            if (product.getWeightKg() != null) ps.setDouble(18, product.getWeightKg()); else ps.setNull(18, java.sql.Types.DECIMAL);
+            if (product.getMaxWeightCapacity() != null) ps.setInt(19, product.getMaxWeightCapacity()); else ps.setNull(19, java.sql.Types.INTEGER);
+            ps.setString(20, product.getAssemblyRequired() != null ? product.getAssemblyRequired() : "No");
+            ps.setString(21, product.getCareInstructions());
             ps.executeUpdate();
 
             ResultSet keys = ps.getGeneratedKeys();
@@ -107,17 +135,34 @@ public class productDaoImpl implements productDao {
 
             String prodSql =
                 "UPDATE products SET product_name=?, image=?, price=?, availability=?, " +
-                "specifications=?, status=?, category_id=?, rating=? WHERE id=?";
+                "description=?, specifications=?, status=?, category_id=?, rating=?, " +
+                "seating_capacity=?, design_style=?, warranty_details=?, " +
+                "return_policy=?, installation_service=?, " +
+                "material=?, frame_material=?, dimensions=?, weight_kg=?, " +
+                "max_weight_capacity=?, assembly_required=?, care_instructions=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(prodSql);
             ps.setString(1, product.getProductName());
             ps.setString(2, product.getImage());
             ps.setDouble(3, product.getPrice());
             ps.setString(4, product.getAvailability());
-            ps.setString(5, product.getSpecifications());
-            ps.setString(6, product.getStatus());
-            ps.setInt(7, categoryId);
-            ps.setDouble(8, product.getRating());
-            ps.setInt(9, product.getId());
+            ps.setString(5, product.getDescription());
+            ps.setString(6, product.getSpecifications());
+            ps.setString(7, product.getStatus());
+            ps.setInt(8, categoryId);
+            ps.setDouble(9, product.getRating());
+            if (product.getSeatingCapacity() != null) ps.setInt(10, product.getSeatingCapacity()); else ps.setNull(10, java.sql.Types.INTEGER);
+            ps.setString(11, product.getDesignStyle());
+            ps.setString(12, product.getWarrantyDetails());
+            ps.setString(13, product.getReturnPolicy());
+            ps.setString(14, product.getInstallationService() != null ? product.getInstallationService() : "No");
+            ps.setString(15, product.getMaterial());
+            ps.setString(16, product.getFrameMaterial());
+            ps.setString(17, product.getDimensions());
+            if (product.getWeightKg() != null) ps.setDouble(18, product.getWeightKg()); else ps.setNull(18, java.sql.Types.DECIMAL);
+            if (product.getMaxWeightCapacity() != null) ps.setInt(19, product.getMaxWeightCapacity()); else ps.setNull(19, java.sql.Types.INTEGER);
+            ps.setString(20, product.getAssemblyRequired() != null ? product.getAssemblyRequired() : "No");
+            ps.setString(21, product.getCareInstructions());
+            ps.setInt(22, product.getId());
             ps.executeUpdate();
 
             // Replace colors: delete old, insert new
@@ -187,11 +232,27 @@ public class productDaoImpl implements productDao {
         p.setImage(rs.getString("image"));
         p.setPrice(rs.getDouble("price"));
         p.setAvailability(rs.getString("availability"));
+        p.setDescription(rs.getString("description"));
         p.setSpecifications(rs.getString("specifications"));
         p.setStatus(rs.getString("status"));
         p.setCategory(rs.getString("category"));
         p.setColors(rs.getString("colors"));
         p.setRating(rs.getDouble("rating"));
+        int sc = rs.getInt("seating_capacity");
+        p.setSeatingCapacity(rs.wasNull() ? null : sc);
+        p.setDesignStyle(rs.getString("design_style"));
+        p.setWarrantyDetails(rs.getString("warranty_details"));
+        p.setReturnPolicy(rs.getString("return_policy"));
+        p.setInstallationService(rs.getString("installation_service"));
+        p.setMaterial(rs.getString("material"));
+        p.setFrameMaterial(rs.getString("frame_material"));
+        p.setDimensions(rs.getString("dimensions"));
+        double wkg = rs.getDouble("weight_kg");
+        p.setWeightKg(rs.wasNull() ? null : wkg);
+        int mwc = rs.getInt("max_weight_capacity");
+        p.setMaxWeightCapacity(rs.wasNull() ? null : mwc);
+        p.setAssemblyRequired(rs.getString("assembly_required"));
+        p.setCareInstructions(rs.getString("care_instructions"));
         return p;
     }
 }

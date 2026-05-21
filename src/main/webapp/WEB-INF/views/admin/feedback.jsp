@@ -47,7 +47,7 @@
           <div class="search-wrap">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" name="search" class="search-input"
-                   placeholder="Search…" value="${fn:escapeXml(search)}" />
+                   placeholder="Search..." value="${fn:escapeXml(search)}" />
             <div class="search-divider"></div>
             <select name="searchBy" class="searchby-select" onchange="this.form.submit()">
               <option value="name"    ${searchBy == 'name'    ? 'selected':''}>Name</option>
@@ -124,7 +124,7 @@
                       <td class="td-addr" style="font-size:12.5px;">
                         <c:choose>
                           <c:when test="${not empty fb.message and fn:length(fb.message) > 60}">
-                            <c:out value="${fn:substring(fb.message, 0, 60)}"/>…
+                            <c:out value="${fn:substring(fb.message, 0, 60)}"/>...
                           </c:when>
                           <c:otherwise><c:out value="${not empty fb.message ? fb.message : '—'}"/></c:otherwise>
                         </c:choose>

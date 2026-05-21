@@ -3,80 +3,98 @@ package com.kathmanduFurniture.controller.servlet.accessControl;
 import com.kathmanduFurniture.dao.user.UserDao;
 import com.kathmanduFurniture.dao.user.UserDaoImpl;
 import com.kathmanduFurniture.entity.user.User;
-import com.kathmanduFurniture.utils.CookieUtil;
 import com.kathmanduFurniture.utils.PasswordUtil;
-import com.kathmanduFurniture.utils.SessionUtil;
 
-import com.kathmanduFurniture.utils.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
-    private final UserDao userDao = new UserDaoImpl();
+    private static final String ADMIN_EMAIL = "admin@kathmandufurniture.com";
+
+    private UserDao userDao;
+
+    @Override
+    public void init() throws ServletException {
+        userDao = new UserDaoImpl();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/views/accessControl/login.jsp")
-                .forward(request, response);
+        HttpSession session = request.getSession(false);
+
+        // Already logged in as admin
+        if (session != null && session.getAttribute("user") != null) {
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
+            return;
+        }
+        // Already logged in as regular user
+        if (session != null && session.getAttribute("loggedInUser") != null) {
+            response.sendRedirect(request.getContextPath() + "/user/home");
+            return;
+        }
+
+        request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String contact = request.getParameter("contact");
+        String contact  = request.getParameter("contact");
         String password = request.getParameter("password");
-        String contactValue;
 
-        User user = null;
+        if (contact == null || contact.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            request.setAttribute("error", "Please fill in all fields.");
+            request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
+            return;
+        }
 
-        // Validate email or phone from userDao
-        if (ValidationUtil.isValidEmail(contact)) {
-            user = userDao.findByEmail(contact);
-        } else if (ValidationUtil.isValidPhone(contact)) {
-            user = userDao.findByPhoneNumber(contact);
+        // Try email first, then phone number
+        User user = contact.contains("@")
+                ? userDao.findByEmail(contact.trim())
+                : userDao.findByPhoneNumber(contact.trim());
+
+        if (user == null || !PasswordUtil.checkPassword(password, user.getPassword())) {
+            request.setAttribute("error", "Invalid email/phone or password.");
+            request.setAttribute("contactValue", contact);
+            request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
+            return;
+        }
+
+        if ("Pending".equals(user.getStatus())) {
+            request.setAttribute("error", "Your account is pending admin approval. Please check back later.");
+            request.setAttribute("contactValue", contact);
+            request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
+            return;
+        }
+
+        if ("Inactive".equals(user.getStatus())) {
+            request.setAttribute("error", "Your account has been deactivated. Please contact support.");
+            request.setAttribute("contactValue", contact);
+            request.getRequestDispatcher("/WEB-INF/views/user/login.jsp").forward(request, response);
+            return;
+        }
+
+        // Invalidate any existing session so a previous user's cart/data is not inherited
+        HttpSession old = request.getSession(false);
+        if (old != null) old.invalidate();
+
+        HttpSession session = request.getSession(true);
+
+        if (ADMIN_EMAIL.equalsIgnoreCase(user.getEmail())) {
+            session.setAttribute("user", user);
+            response.sendRedirect(request.getContextPath() + "/admin/dashboard");
         } else {
-            request.setAttribute("error", "Enter valid email or phone.");
-            request.getRequestDispatcher("/WEB-INF/views/accessControl/login.jsp")
-                    .forward(request, response);
-            return;
+            session.setAttribute("loggedInUser", user);
+            response.sendRedirect(request.getContextPath() + "/user/home");
         }
-
-        if (user == null) {
-            request.setAttribute("error", "Email or phone number cannot be empty");
-            request.getRequestDispatcher("/WEB-INF/views/accessControl/login.jsp")
-                    .forward(request, response);
-            return;
-        }
-
-        if (password == null) {
-            request.setAttribute("error", "Password cannot be empty");
-        }
-
-        if (!PasswordUtil.checkPassword(password, user.getPassword())) {
-            request.setAttribute("error", "Invalid Contact or password.");
-            request.getRequestDispatcher("/WEB-INF/views/accessControl/login.jsp")
-                    .forward(request, response);
-            return;
-        }
-
-        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
-            contactValue = user.getEmail();
-        } else {
-            contactValue = user.getMobileNumber();
-        }
-
-        SessionUtil.setAttribute(request, "user", user);
-        CookieUtil.addCookie(response, "Contact", contactValue, 24 * 60 * 60);
-
-        response.sendRedirect(request.getContextPath() + "/landingPage");
     }
 }

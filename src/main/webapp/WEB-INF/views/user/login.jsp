@@ -1,13 +1,13 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!doctype html>
 <html lang="en">
 <jsp:include page="/WEB-INF/templates/head.jsp">
-    <jsp:param name="title" value="Sign In — Kathmandu Furniture" />
-    <jsp:param name="pageFolder" value="user" />
+    <jsp:param name="title"          value="Sign In — Kathmandu Furniture" />
+    <jsp:param name="pageFolder"     value="user" />
     <jsp:param name="currentCssFile" value="auth" />
-    <jsp:param name="headerCssFile" value="header" />
-    <jsp:param name="footerCssFile" value="footer" />
+    <jsp:param name="headerCssFile"  value="header" />
+    <jsp:param name="footerCssFile"  value="footer" />
 </jsp:include>
 
 <body>
@@ -18,17 +18,26 @@
     <div class="auth-card">
 
         <a href="${pageContext.request.contextPath}/user/home" class="auth-logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo-2.png" alt="Kathmandu Furniture" />
+            <img src="${pageContext.request.contextPath}/static/images/kathmanduFurnitureLogo.png"
+                 alt="Kathmandu Furniture" />
         </a>
 
-        <h1 class="auth-title">Welcome Back</h1>
-        <p class="auth-subtitle">Sign in to your account to continue.</p>
+        <h1 class="auth-title">Sign In</h1>
+        <p class="auth-subtitle">Welcome back! Enter your credentials to continue.</p>
 
         <%-- Success message after registration --%>
         <c:if test="${param.registered == 'true'}">
             <div class="auth-alert success">
-                Account created successfully! Your account is pending admin approval.
+                Account created! Your account is pending admin approval.
             </div>
+        </c:if>
+
+        <%-- Redirect messages --%>
+        <c:if test="${param.msg == 'login'}">
+            <div class="auth-alert info">Please sign in to continue.</div>
+        </c:if>
+        <c:if test="${param.msg == 'admin'}">
+            <div class="auth-alert info">Admin access only. Please sign in with your admin credentials.</div>
         </c:if>
 
         <%-- Error message --%>
@@ -36,12 +45,13 @@
             <div class="auth-alert error"><c:out value="${error}"/></div>
         </c:if>
 
-        <form class="auth-form" method="post" action="${pageContext.request.contextPath}/user/login">
+        <form class="auth-form" method="post" action="${pageContext.request.contextPath}/login">
+
             <div class="auth-field">
-                <label class="auth-label" for="email">Email Address</label>
-                <input class="auth-input" type="email" id="email" name="email"
-                       placeholder="you@example.com"
-                       value="<c:out value='${emailValue}'/>" required />
+                <label class="auth-label" for="contact">Email or Phone Number</label>
+                <input class="auth-input" type="text" id="contact" name="contact"
+                       placeholder="Email or mobile number"
+                       value="<c:out value='${contactValue}'/>" required />
             </div>
 
             <div class="auth-field">
@@ -62,8 +72,8 @@
         </form>
 
         <div class="auth-footer">
-            Don&apos;t have an account?
-            <a href="${pageContext.request.contextPath}/user/join-us">Join Us</a>
+            Don't have an account?
+            <a href="${pageContext.request.contextPath}/user/join-us">Create one</a>
         </div>
 
     </div>
@@ -80,4 +90,3 @@
 
 </body>
 </html>
-

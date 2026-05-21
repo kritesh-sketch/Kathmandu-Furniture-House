@@ -63,7 +63,7 @@
           </div>
 
           <div class="detail-price-block">
-            <div class="detail-price-label">Price</div>
+            <div class="detail-price-label">Price (Rs.)</div>
             <div class="detail-price-value">
               <span>Rs.</span><fmt:formatNumber value="${product.price}" pattern="#,##0.00"/>
             </div>
@@ -113,10 +113,6 @@
             </div>
             <div class="detail-panel-body">
               <div class="info-row">
-                <span class="info-label">Product ID</span>
-                <span class="info-value col-id">PRD-${product.id}</span>
-              </div>
-              <div class="info-row">
                 <span class="info-label">Name</span>
                 <span class="info-value"><c:out value="${product.productName}"/></span>
               </div>
@@ -132,7 +128,7 @@
                 </span>
               </div>
               <div class="info-row">
-                <span class="info-label">Price</span>
+                <span class="info-label">Price (Rs.)</span>
                 <span class="info-value" style="font-weight:700;color:var(--t1);">
                   Rs. <fmt:formatNumber value="${product.price}" pattern="#,##0.00"/>
                 </span>
@@ -143,12 +139,12 @@
                   <c:out value="${not empty product.availability ? product.availability : '—'}"/>
                 </span>
               </div>
-              <div class="info-row">
-                <span class="info-label">Status</span>
-                <span class="info-value">
-                  <c:out value="${not empty product.status ? product.status : '—'}"/>
-                </span>
-              </div>
+              <c:if test="${not empty product.description}">
+                <div class="info-row">
+                  <span class="info-label">Description</span>
+                  <span class="info-value"><c:out value="${product.description}"/></span>
+                </div>
+              </c:if>
               <div class="info-row">
                 <span class="info-label">Colors</span>
                 <span class="info-value">
@@ -198,22 +194,113 @@
             </div>
           </div>
 
-          <!-- Specifications -->
-          <div class="detail-panel">
-            <div class="detail-panel-header">
-              <h3><i class="fa-solid fa-list-check"></i> Specifications</h3>
+          <!-- Specifications (only if filled) -->
+          <c:if test="${not empty product.specifications}">
+            <div class="detail-panel">
+              <div class="detail-panel-header">
+                <h3><i class="fa-solid fa-list-check"></i> Specifications</h3>
+              </div>
+              <div class="detail-panel-body">
+                <p class="spec-text"><c:out value="${product.specifications}"/></p>
+              </div>
             </div>
-            <div class="detail-panel-body">
-              <c:choose>
-                <c:when test="${not empty product.specifications}">
-                  <p class="spec-text"><c:out value="${product.specifications}"/></p>
-                </c:when>
-                <c:otherwise>
-                  <p class="spec-empty">No specifications provided.</p>
-                </c:otherwise>
-              </c:choose>
+          </c:if>
+
+          <!-- Additional Details (only shown if at least one field has a value) -->
+          <c:set var="hasExtra" value="${not empty product.seatingCapacity or not empty product.designStyle
+              or not empty product.material or not empty product.frameMaterial
+              or not empty product.dimensions or not empty product.weightKg
+              or not empty product.maxWeightCapacity
+              or not empty product.warrantyDetails
+              or not empty product.returnPolicy or not empty product.careInstructions}"/>
+          <c:if test="${hasExtra}">
+            <div class="detail-panel">
+              <div class="detail-panel-header">
+                <h3><i class="fa-solid fa-circle-check"></i> Additional Details</h3>
+              </div>
+              <div class="detail-panel-body">
+                <c:if test="${not empty product.seatingCapacity}">
+                  <div class="info-row">
+                    <span class="info-label">Seating Capacity</span>
+                    <span class="info-value">${product.seatingCapacity} persons</span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.designStyle}">
+                  <div class="info-row">
+                    <span class="info-label">Design / Style</span>
+                    <span class="info-value"><c:out value="${product.designStyle}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.material}">
+                  <div class="info-row">
+                    <span class="info-label">Material</span>
+                    <span class="info-value"><c:out value="${product.material}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.frameMaterial}">
+                  <div class="info-row">
+                    <span class="info-label">Frame Material</span>
+                    <span class="info-value"><c:out value="${product.frameMaterial}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.dimensions}">
+                  <div class="info-row">
+                    <span class="info-label">Dimensions</span>
+                    <span class="info-value"><c:out value="${product.dimensions}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.weightKg}">
+                  <div class="info-row">
+                    <span class="info-label">Weight</span>
+                    <span class="info-value">${product.weightKg} kg</span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.maxWeightCapacity}">
+                  <div class="info-row">
+                    <span class="info-label">Max Weight Capacity</span>
+                    <span class="info-value">${product.maxWeightCapacity} kg</span>
+                  </div>
+                </c:if>
+                <div class="info-row">
+                  <span class="info-label">Assembly</span>
+                  <span class="info-value">
+                    <c:choose>
+                      <c:when test="${product.assemblyRequired == 'Yes'}">Required</c:when>
+                      <c:otherwise>Not Required</c:otherwise>
+                    </c:choose>
+                  </span>
+                </div>
+                <div class="info-row">
+                  <span class="info-label">Installation</span>
+                  <span class="info-value">
+                    <c:choose>
+                      <c:when test="${product.installationService == 'Yes'}">Available</c:when>
+                      <c:when test="${product.installationService == 'Optional'}">Optional</c:when>
+                      <c:otherwise>Not Available</c:otherwise>
+                    </c:choose>
+                  </span>
+                </div>
+                <c:if test="${not empty product.warrantyDetails}">
+                  <div class="info-row">
+                    <span class="info-label">Warranty</span>
+                    <span class="info-value"><c:out value="${product.warrantyDetails}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.returnPolicy}">
+                  <div class="info-row">
+                    <span class="info-label">Return / Exchange</span>
+                    <span class="info-value"><c:out value="${product.returnPolicy}"/></span>
+                  </div>
+                </c:if>
+                <c:if test="${not empty product.careInstructions}">
+                  <div class="info-row">
+                    <span class="info-label">Care Instructions</span>
+                    <span class="info-value"><c:out value="${product.careInstructions}"/></span>
+                  </div>
+                </c:if>
+              </div>
             </div>
-          </div>
+          </c:if>
 
         </div>
         <%-- end detail-panels --%>

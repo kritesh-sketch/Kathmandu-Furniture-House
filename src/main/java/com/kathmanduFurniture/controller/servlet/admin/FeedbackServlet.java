@@ -1,7 +1,7 @@
 package com.kathmanduFurniture.controller.servlet.admin;
 
-import com.kathmanduFurniture.dao.admin.feedbackDao;
-import com.kathmanduFurniture.dao.admin.feedbackDaoImpl;
+import com.kathmanduFurniture.dao.admin.FeedbackDao;
+import com.kathmanduFurniture.dao.admin.FeedbackDaoImpl;
 import com.kathmanduFurniture.entity.user.Feedback;
 
 import jakarta.servlet.ServletException;
@@ -15,11 +15,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servlet for the admin feedback list at {@code /admin/feedback}.
+ * Supports search/status filters, pagination, auto-marks 'New' feedback
+ * as 'Reviewed' on open, and allows status updates via POST.
+ */
 @WebServlet(name = "FeedbackServlet", value = "/admin/feedback")
 public class FeedbackServlet extends HttpServlet {
 
     private static final int PAGE_SIZE = 10;
-    private final feedbackDao dao = new feedbackDaoImpl();
+    private final FeedbackDao dao = new FeedbackDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

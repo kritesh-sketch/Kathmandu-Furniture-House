@@ -45,7 +45,7 @@ public class HomeDaoImpl implements HomeDao {
                 products.add(product);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error in displaying all spotlight" + e.getMessage());
         }
         return products;
     }

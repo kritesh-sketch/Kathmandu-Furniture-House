@@ -23,19 +23,38 @@ public class ProductServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String category = request.getParameter("category");
-        List<Product> products;
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
 
-        if (category != null && !category.trim().isEmpty()) {
-            products = productDao.getProductsByCategory(category.trim());
-            request.setAttribute("selectedCategory", category.trim());
-        } else {
-            products = productDao.getAllActiveProducts();
-            request.setAttribute("selectedCategory", "");
-        }
+        String category     = trim(request.getParameter("category"));
+        String availability = trim(request.getParameter("availability"));
+        String sort         = trim(request.getParameter("sort"));
+        String search       = trim(request.getParameter("search"));
+        String minPriceStr  = trim(request.getParameter("minPrice"));
+        String maxPriceStr  = trim(request.getParameter("maxPrice"));
 
-        request.setAttribute("products", products);
+        Double minPrice = null, maxPrice = null;
+        try { if (!minPriceStr.isEmpty()) minPrice = Double.parseDouble(minPriceStr); } catch (NumberFormatException ignored) {}
+        try { if (!maxPriceStr.isEmpty()) maxPrice = Double.parseDouble(maxPriceStr); } catch (NumberFormatException ignored) {}
+
+        List<Product> products = productDao.getFilteredProducts(
+                category, minPrice, maxPrice, availability, sort, search);
+
+        request.setAttribute("products",     products);
+        request.setAttribute("totalCount",   products.size());
+        request.setAttribute("categories",   productDao.getAllCategories());
+        request.setAttribute("maxPriceDb",   (int) productDao.getMaxPrice());
+        request.setAttribute("category",     category);
+        request.setAttribute("availability", availability);
+        request.setAttribute("sort",         sort);
+        request.setAttribute("search",       search);
+        request.setAttribute("minPrice",     minPriceStr);
+        request.setAttribute("maxPrice",     maxPriceStr);
+
         request.getRequestDispatcher("/WEB-INF/views/user/products.jsp").forward(request, response);
+    }
+
+    private String trim(String s) {
+        return s != null ? s.trim() : "";
     }
 }

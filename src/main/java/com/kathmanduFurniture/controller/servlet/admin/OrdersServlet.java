@@ -1,7 +1,7 @@
 package com.kathmanduFurniture.controller.servlet.admin;
 
-import com.kathmanduFurniture.dao.admin.orderDao;
-import com.kathmanduFurniture.dao.admin.orderDaoImpl;
+import com.kathmanduFurniture.dao.admin.OrderDao;
+import com.kathmanduFurniture.dao.admin.OrderDaoImpl;
 import com.kathmanduFurniture.entity.user.Order;
 
 import jakarta.servlet.ServletException;
@@ -15,11 +15,16 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Servlet for the admin order list at {@code /admin/orders}.
+ * Supports search by name/id/phone/product, status and type filters,
+ * pagination, detail view, and CSV export.
+ */
 @WebServlet(name = "OrdersServlet", value = "/admin/orders")
 public class OrdersServlet extends HttpServlet {
 
     private static final int PAGE_SIZE = 10;
-    private final orderDao dao = new orderDaoImpl();
+    private final OrderDao dao = new OrderDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

@@ -17,8 +17,13 @@ import java.time.Year;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Handles new user self-registration at {@code /join-us}.
+ * GET renders the form with date-of-birth dropdown data.
+ * POST validates inputs, hashes the password, and persists the new account.
+ */
 @WebServlet("/register")
-public class registerServlet extends HttpServlet {
+public class RegisterServlet extends HttpServlet {
 
     private final UserDao userDao = new UserDaoImpl();
 
@@ -54,7 +59,6 @@ public class registerServlet extends HttpServlet {
 
         String firstName = request.getParameter("firstName");
         String lastName = request.getParameter("lastName");
-        String DOB = request.getParameter("DOB");
         String gender = request.getParameter("gender");
         String contact = request.getParameter("contact");
         String password = request.getParameter("password");
@@ -86,7 +90,7 @@ public class registerServlet extends HttpServlet {
             errors.append("Last name must be at least 3 characters. ");
         }
 
-        if (ValidationUtil.isNullOrEmpty(DOB)) {
+        if (ValidationUtil.isNullOrEmpty(dob)) {
             errors.append("Date of birth cannot be empty. ");
         }
 

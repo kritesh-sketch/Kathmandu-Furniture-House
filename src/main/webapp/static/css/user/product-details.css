@@ -39,10 +39,24 @@
 .pd-image-wrap img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 0.5s ease;
 }
 .pd-image-wrap:hover img { transform: scale(1.04); }
+
+.pd-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    color: #c4c9d4;
+    background: #f0f1f5;
+}
+.pd-img-placeholder i    { font-size: 72px; }
+.pd-img-placeholder span { font-size: 13px; font-weight: 600; color: #9ca3af; text-align: center; padding: 0 20px; }
 
 /* Right: info */
 .pd-info { display: flex; flex-direction: column; gap: 18px; }
@@ -63,10 +77,30 @@
     letter-spacing: -0.3px;
 }
 
+.pd-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: -6px;
+}
+.pd-stars-inline { color: #f59e0b; font-size: 14px; display: flex; gap: 2px; }
+.pd-rating-num { font-size: 13px; font-weight: 600; color: #6b7280; }
+
 .pd-price {
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 800;
     color: #111;
+    letter-spacing: -0.5px;
+}
+
+.pd-description {
+    font-size: 14.5px;
+    color: #555;
+    line-height: 1.75;
+    margin: 0;
+    padding: 14px 0;
+    border-top: 1px solid #f0f0f0;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 /* Availability badge */
@@ -108,22 +142,128 @@
     box-shadow: 0 0 0 3px #fff, 0 0 0 5px #111;
 }
 
-/* Specifications */
-.pd-specs-label {
-    font-size: 13px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 8px;
+/* ── Specifications table ── */
+.pd-specs {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
 }
-.pd-specs-text {
-    font-size: 14px;
+
+.pd-specs-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #6b7280;
+    padding: 11px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pd-spec-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 13.5px;
+}
+.pd-spec-row:last-child { border-bottom: none; }
+.pd-spec-row:nth-child(even) { background: #fafafa; }
+
+.pd-spec-key {
+    flex: 0 0 130px;
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.pd-spec-val {
+    color: #111;
+    flex: 1;
+    font-weight: 500;
+}
+
+.pd-spec-feature { align-items: center; }
+.pd-spec-check {
+    color: #16a34a;
+    font-size: 11px;
+    flex-shrink: 0;
+}
+
+/* Accordion */
+.pd-accordion {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.pd-acc-item { border-bottom: 1px solid #e8e8e8; }
+.pd-acc-item:last-child { border-bottom: none; }
+
+.pd-acc-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #222;
+    text-align: left;
+    gap: 8px;
+}
+.pd-acc-header:hover { background: #fafafa; }
+.pd-acc-header span { display: flex; align-items: center; gap: 8px; }
+.pd-acc-header span i { color: #8c6a3f; font-size: 14px; }
+.pd-acc-arrow { font-size: 11px; color: #999; transition: transform 0.2s ease; flex-shrink: 0; }
+
+.pd-acc-body {
+    display: none;
+    padding: 4px 0 12px;
+    background: #fafafa;
+}
+.pd-acc-body.open { display: block; }
+
+.pd-detail-row {
+    display: flex;
+    gap: 12px;
+    padding: 8px 18px;
+    font-size: 13px;
+    align-items: flex-start;
+}
+.pd-detail-key {
+    flex: 0 0 150px;
+    font-weight: 600;
+    color: #444;
+}
+.pd-detail-val {
+    color: #555;
+    flex: 1;
+    line-height: 1.6;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.pd-acc-text {
+    margin: 0;
+    padding: 4px 18px 4px;
+    font-size: 13.5px;
     color: #555;
     line-height: 1.75;
-    white-space: pre-line;
 }
+.pd-stars { color: #f59e0b; font-size: 13px; display: flex; gap: 2px; }
 
 /* Quantity + Add to Cart */
 .pd-actions { display: flex; flex-direction: column; gap: 12px; }
+
+.pd-btn-row { display: flex; gap: 10px; }
+.pd-btn-row form:first-child { flex: 1; }
+.pd-btn-row form:first-child .pd-add-cart { width: 100%; }
 
 .pd-qty-row {
     display: flex;
@@ -198,10 +338,86 @@
 }
 .pd-wishlist-btn svg { width: 18px; height: 18px; }
 
+.pd-request-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 13px;
+    background: #fff;
+    color: #b45309;
+    font-size: 13.5px;
+    font-weight: 700;
+    border: 1.5px solid #b45309;
+    border-radius: 3px;
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+}
+.pd-request-btn:hover {
+    background: #b45309;
+    color: #fff;
+}
+
+/* Guest sign-in prompt */
+.pd-signin-prompt {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 20px;
+    background: #fafafa;
+    border: 1px solid #e8e8e8;
+    border-radius: 6px;
+}
+.pd-signin-prompt p {
+    font-size: 13.5px;
+    color: #555;
+    margin-bottom: 14px;
+    line-height: 1.6;
+}
+
+/* ── DIMENSION BOXES ── */
+.pd-dim-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 4px;
+}
+.pd-dim-box {
+    background: #f9fafb;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    padding: 14px 12px;
+    text-align: center;
+}
+.pd-dim-lbl {
+    font-size: 11px;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: 6px;
+}
+.pd-dim-val {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111;
+}
+.pd-dim-unit {
+    font-size: 12px;
+    font-weight: 500;
+    color: #888;
+}
+
 /* Responsive */
 @media (max-width: 860px) {
     .pd-page { padding: 32px 24px 60px; }
     .pd-layout { grid-template-columns: 1fr; gap: 28px; }
     .pd-image-wrap { position: static; }
     .pd-name { font-size: 22px; }
+    .pd-custom-grid { grid-template-columns: 1fr; }
 }

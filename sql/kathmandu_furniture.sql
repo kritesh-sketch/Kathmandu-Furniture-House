@@ -13,12 +13,9 @@ USE kathmandu_furniture;
 DROP TABLE IF EXISTS wishlist;
 DROP TABLE IF EXISTS cart;
 DROP TABLE IF EXISTS sales;
-DROP TABLE IF EXISTS job_applications;
-DROP TABLE IF EXISTS job_vacancies;
-DROP TABLE IF EXISTS offers;
 DROP TABLE IF EXISTS feedback;
-DROP TABLE IF EXISTS return_orders;
 DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS allocations;
 DROP TABLE IF EXISTS product_colors;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS categories;
@@ -32,8 +29,8 @@ CREATE TABLE users (
     id          INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
     firstName   VARCHAR(100) NOT NULL,
     lastName    VARCHAR(100) NOT NULL,
-    email       VARCHAR(255) NOT NULL UNIQUE,
-    phoneNumber VARCHAR(20)  NOT NULL UNIQUE,
+    email       VARCHAR(255) UNIQUE,
+    phoneNumber VARCHAR(20)  UNIQUE,
     password    VARCHAR(255) NOT NULL,
     dob         DATE,
     gender      ENUM('Male','Female','Other'),
@@ -59,12 +56,25 @@ CREATE TABLE products (
     image          VARCHAR(500),
     price          DECIMAL(10,2) NOT NULL,
     availability   ENUM('In Stock','Out of Stock','Coming Soon') NOT NULL DEFAULT 'In Stock',
+    description    TEXT,
     specifications TEXT,
     status         ENUM('Active','Inactive','New')               NOT NULL DEFAULT 'Active',
     category_id    INT           NOT NULL,
-    rating         DECIMAL(3,1)  NOT NULL DEFAULT 0.0,
-    created_at     TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    rating               DECIMAL(3,1)  NOT NULL DEFAULT 0.0,
+    seating_capacity     INT,
+    design_style         VARCHAR(100),
+    warranty_details     TEXT,
+    return_policy        TEXT,
+    installation_service ENUM('Yes','No','Optional') NOT NULL DEFAULT 'No',
+    material             VARCHAR(100),
+    frame_material       VARCHAR(100),
+    dimensions           VARCHAR(100),
+    weight_kg            DECIMAL(5,1),
+    max_weight_capacity  INT,
+    assembly_required    ENUM('Yes','No') NOT NULL DEFAULT 'No',
+    care_instructions    TEXT,
+    created_at           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at           TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT chk_rating CHECK (rating >= 0.0 AND rating <= 5.0),
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
@@ -104,8 +114,10 @@ CREATE TABLE orders (
     deadline              VARCHAR(100),
     installation_required ENUM('Yes','No') DEFAULT 'No',
     purpose               TEXT,
+    description           TEXT,
     notes                 TEXT,
     recommendation        TEXT,
+    reference_image       VARCHAR(500),
     status                ENUM('Pending','Confirmed','Processing','Shipped','Delivered','Cancelled')
                               NOT NULL DEFAULT 'Pending',
     order_date            TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -141,53 +153,35 @@ CREATE TABLE feedback (
     created_at TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- ── 8. OFFERS ─────────────────────────────────────────────────────────────────
-CREATE TABLE offers (
-    id               INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title            VARCHAR(255)  NOT NULL,
-    event_name       VARCHAR(255),
-    discount_code    VARCHAR(50)   UNIQUE,
-    discount_type    ENUM('Percentage','Fixed') NOT NULL,
-    discount_percent DECIMAL(5,2)  NOT NULL DEFAULT 0.00,
-    discount_amount  DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    description      TEXT,
-    status           ENUM('Active','Inactive','Expired') NOT NULL DEFAULT 'Active',
-    start_date       DATE          NOT NULL,
-    end_date         DATE          NOT NULL,
-    created_at       TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP
+-- ── 8. STORAGE LOCATIONS ─────────────────────────────────────────────────────
+-- Defines warehouse zones and rack numbers for organizing furniture inventory.
+CREATE TABLE storage_locations (
+    id          INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    zone        VARCHAR(100) NOT NULL,
+    rack_number VARCHAR(50)  NOT NULL,
+    description TEXT,
+    capacity    INT          NOT NULL DEFAULT 0,
+    status      ENUM('Available','Full','Inactive') NOT NULL DEFAULT 'Available',
+    created_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_zone_rack (zone, rack_number)
 );
 
--- ── 9. JOB VACANCIES ──────────────────────────────────────────────────────────
-CREATE TABLE job_vacancies (
-    id           INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    title        VARCHAR(255) NOT NULL,
-    department   VARCHAR(100) NOT NULL,
-    location     VARCHAR(255) NOT NULL,
-    type         ENUM('Full-time','Part-time','Contract','Internship') NOT NULL,
-    description  TEXT         NOT NULL,
-    requirements TEXT         NOT NULL,
-    salary_min   INT,
-    salary_max   INT,
-    status       ENUM('Active','Closed','Draft') NOT NULL DEFAULT 'Active',
-    created_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+-- ── 9. STORAGE ASSIGNMENTS ────────────────────────────────────────────────────
+-- Links products to specific storage locations with quantity tracking.
+CREATE TABLE storage_assignments (
+    id                  INT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id          INT       NOT NULL,
+    storage_location_id INT       NOT NULL,
+    quantity            INT       NOT NULL DEFAULT 1,
+    assigned_date       DATE      NOT NULL,
+    notes               TEXT,
+    created_at          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id)          REFERENCES products(id)          ON DELETE CASCADE,
+    FOREIGN KEY (storage_location_id) REFERENCES storage_locations(id) ON DELETE CASCADE
 );
 
--- ── 10. JOB APPLICATIONS ──────────────────────────────────────────────────────
-CREATE TABLE job_applications (
-    id             INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    vacancy_id     INT,
-    applicant_name VARCHAR(200) NOT NULL,
-    email          VARCHAR(255) NOT NULL,
-    phone          VARCHAR(20)  NOT NULL,
-    cover_letter   TEXT,
-    resume_path    VARCHAR(500) ,
-    status         ENUM('Pending','Reviewed','Shortlisted','Rejected','Hired') NOT NULL DEFAULT 'Pending',
-    applied_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (vacancy_id) REFERENCES job_vacancies(id) ON DELETE SET NULL
-);
-
--- ── 11. SALES ─────────────────────────────────────────────────────────────────
+-- ── 10. SALES ─────────────────────────────────────────────────────────────────
 -- selling_price records price at time of sale (products.price can change later).
 CREATE TABLE sales (
     id            INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -211,6 +205,25 @@ CREATE TABLE cart (
     UNIQUE KEY uq_cart_item (user_id, product_id),
     FOREIGN KEY (user_id)    REFERENCES users(id)    ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+-- ── 10. ALLOCATIONS ───────────────────────────────────────────────────────────
+-- Tracks furniture issued to users or departments with issue/return dates.
+CREATE TABLE allocations (
+    id                    INT           NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    product_id            INT           NOT NULL,
+    allocated_to_user_id  INT,
+    department            VARCHAR(200),
+    quantity              INT           NOT NULL DEFAULT 1,
+    issue_date            DATE          NOT NULL,
+    expected_return_date  DATE,
+    actual_return_date    DATE,
+    status                ENUM('Issued','Returned','Overdue') NOT NULL DEFAULT 'Issued',
+    notes                 TEXT,
+    created_at            TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at            TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id)           REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (allocated_to_user_id) REFERENCES users(id)    ON DELETE SET NULL
 );
 
 -- ── 13. WISHLIST ──────────────────────────────────────────────────────────────

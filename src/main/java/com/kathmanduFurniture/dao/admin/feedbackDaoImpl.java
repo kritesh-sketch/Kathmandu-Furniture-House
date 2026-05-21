@@ -7,7 +7,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class feedbackDaoImpl implements feedbackDao {
+/**
+ * JDBC implementation of {@link FeedbackDao}.
+ * Executes SQL against the feedback table using prepared statements.
+ */
+public class FeedbackDaoImpl implements FeedbackDao {
 
     @Override
     public boolean saveFeedback(Feedback f) {

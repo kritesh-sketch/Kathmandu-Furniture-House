@@ -2,6 +2,7 @@ package com.kathmanduFurniture.controller.servlet.user;
 
 import com.kathmanduFurniture.dao.user.ProductDao;
 import com.kathmanduFurniture.dao.user.ProductDaoImpl;
+import com.kathmanduFurniture.entity.user.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -9,8 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet(name = "StorageServlet", value = "/user/storage")
+@WebServlet(name = "UserStorageServlet", value = "/user/storage")
 public class StorageServlet extends HttpServlet {
 
     private ProductDao productDao;
@@ -23,8 +25,32 @@ public class StorageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        String availability = trim(request.getParameter("availability"));
+        String sort         = trim(request.getParameter("sort"));
+        String search       = trim(request.getParameter("search"));
+        String minPriceStr  = trim(request.getParameter("minPrice"));
+        String maxPriceStr  = trim(request.getParameter("maxPrice"));
+
+        Double minPrice = null, maxPrice = null;
+        try { if (!minPriceStr.isEmpty()) minPrice = Double.parseDouble(minPriceStr); } catch (NumberFormatException ignored) {}
+        try { if (!maxPriceStr.isEmpty()) maxPrice = Double.parseDouble(maxPriceStr); } catch (NumberFormatException ignored) {}
+
+        List<Product> products = productDao.getFilteredProducts(
+                "Storage & Cabinets", minPrice, maxPrice, availability, sort, search);
+
+        request.setAttribute("products",     products);
+        request.setAttribute("totalCount",   products.size());
+        request.setAttribute("maxPriceDb",   (int) productDao.getMaxPrice());
         request.setAttribute("categoryName", "Storage & Cabinets");
-        request.setAttribute("products", productDao.getProductsByCategory("Storage & Cabinets"));
+        request.setAttribute("availability", availability);
+        request.setAttribute("sort",         sort);
+        request.setAttribute("search",       search);
+        request.setAttribute("minPrice",     minPriceStr);
+        request.setAttribute("maxPrice",     maxPriceStr);
+
         request.getRequestDispatcher("/WEB-INF/views/user/storage-cabinets.jsp").forward(request, response);
     }
+
+    private String trim(String s) { return s != null ? s.trim() : ""; }
 }

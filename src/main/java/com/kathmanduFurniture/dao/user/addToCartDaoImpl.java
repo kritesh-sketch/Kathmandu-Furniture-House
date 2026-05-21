@@ -1,4 +1,8 @@
 package com.kathmanduFurniture.dao.user;
 
-public class addToCartDaoImpl implements addToCartDao{
+/**
+ * JDBC implementation of {@link AddToCartDao}.
+ * Placeholder for future database-backed cart persistence.
+ */
+public class AddToCartDaoImpl implements AddToCartDao{
 }

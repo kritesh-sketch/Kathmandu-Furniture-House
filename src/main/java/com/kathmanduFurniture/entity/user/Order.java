@@ -1,5 +1,7 @@
 package com.kathmanduFurniture.entity.user;
 
+import java.sql.Timestamp;
+
 public class Order {
     private int id;
     private String furnitureType;
@@ -13,6 +15,7 @@ public class Order {
     private String purpose;
     private String recommendation;
     private String budgetRange;
+    private String description;
     private String notes;
     private Double amount;
     private String status;
@@ -24,6 +27,16 @@ public class Order {
     private String paymentMethod;
     private Double height;
     private Double width;
+    private Double breadth;
+
+    // Extra DB fields
+    private Double      totalAmount;
+    private Timestamp   orderDate;
+    private int         productId;
+    private int         customerId;
+
+    // Reference image uploaded with a custom request
+    private String referenceImage;
 
     // Dashboard-only fields (populated from JOIN queries)
     private String customerName;
@@ -120,6 +133,9 @@ public class Order {
     public String getBudgetRange()                    { return budgetRange; }
     public void setBudgetRange(String budgetRange)    { this.budgetRange = budgetRange; }
 
+    public String getDescription()                 { return description; }
+    public void setDescription(String description) { this.description = description; }
+
     public String getNotes()               { return notes; }
     public void setNotes(String notes)     { this.notes = notes; }
 
@@ -160,4 +176,22 @@ public class Order {
 
     public Double getWidth()               { return width; }
     public void setWidth(Double width)     { this.width = width; }
+
+    public Double getBreadth()             { return breadth; }
+    public void setBreadth(Double breadth) { this.breadth = breadth; }
+
+    public Double    getTotalAmount()                  { return totalAmount; }
+    public void      setTotalAmount(Double v)          { this.totalAmount = v; }
+
+    public Timestamp getOrderDate()                    { return orderDate; }
+    public void      setOrderDate(Timestamp v)         { this.orderDate = v; }
+
+    public int       getProductId()                    { return productId; }
+    public void      setProductId(int v)               { this.productId = v; }
+
+    public int       getCustomerId()                   { return customerId; }
+    public void      setCustomerId(int v)              { this.customerId = v; }
+
+    public String getReferenceImage()                        { return referenceImage; }
+    public void   setReferenceImage(String referenceImage)   { this.referenceImage = referenceImage; }
 }

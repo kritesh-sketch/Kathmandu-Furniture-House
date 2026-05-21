@@ -1,0 +1,192 @@
+/* ── Static Info Pages (About, FAQ, Privacy, Terms, Shipping) ── */
+
+.info-page {
+    min-height: calc(100vh - 160px);
+    background: #f8f9fa;
+    padding: 56px 32px 80px;
+}
+
+.info-container {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.info-hero {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.info-hero h1 {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 12px;
+}
+
+.info-hero p {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.info-divider {
+    width: 60px;
+    height: 3px;
+    background: #111827;
+    margin: 18px auto 0;
+    border-radius: 2px;
+}
+
+/* ── Card sections ── */
+.info-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 32px 36px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.05);
+}
+
+.info-card h2 {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-card h2 i {
+    font-size: 16px;
+    color: #4b5563;
+}
+
+.info-card p,
+.info-card li {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 14.5px;
+    color: #4b5563;
+    line-height: 1.8;
+    margin: 0 0 10px;
+}
+
+.info-card ul,
+.info-card ol {
+    padding-left: 20px;
+    margin: 8px 0 0;
+}
+
+.info-card li { margin-bottom: 8px; }
+
+/* ── FAQ accordion ── */
+.faq-item {
+    border-bottom: 1px solid #f3f4f6;
+    padding: 18px 0;
+}
+.faq-item:last-child { border-bottom: none; padding-bottom: 0; }
+.faq-item:first-child { padding-top: 0; }
+
+.faq-q {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    user-select: none;
+}
+
+.faq-q i {
+    font-size: 12px;
+    color: #9ca3af;
+    flex-shrink: 0;
+    transition: transform .2s;
+}
+.faq-item.open .faq-q i { transform: rotate(180deg); }
+
+.faq-a {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 14px;
+    color: #6b7280;
+    line-height: 1.8;
+    margin-top: 10px;
+    display: none;
+}
+.faq-item.open .faq-a { display: block; }
+
+/* ── About grid ── */
+.about-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.about-stat {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+
+.about-stat-val {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    line-height: 1;
+}
+
+.about-stat-lbl {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    color: #9ca3af;
+    margin-top: 6px;
+}
+
+/* ── Shipping table ── */
+.ship-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 14px;
+    margin-top: 12px;
+}
+
+.ship-table th {
+    background: #f9fafb;
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.ship-table td {
+    padding: 12px 16px;
+    color: #4b5563;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.ship-table tbody tr:last-child td { border-bottom: none; }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+    .info-page { padding: 32px 16px 60px; }
+    .info-card { padding: 24px 20px; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+    .info-hero h1 { font-size: 28px; }
+}

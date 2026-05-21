@@ -1,7 +1,7 @@
 package com.kathmanduFurniture.controller.servlet.admin;
 
-import com.kathmanduFurniture.dao.admin.productDao;
-import com.kathmanduFurniture.dao.admin.productDaoImpl;
+import com.kathmanduFurniture.dao.admin.ProductDao;
+import com.kathmanduFurniture.dao.admin.ProductDaoImpl;
 import com.kathmanduFurniture.entity.user.Product;
 
 import jakarta.servlet.ServletException;
@@ -13,13 +13,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * Servlet for the admin product list at {@code /admin/products}.
+ * Supports search/category filtering, pagination, detail view, and CSV export.
+ */
 @WebServlet(name = "ProductsServlet", value = "/admin/products")
 public class ProductsServlet extends HttpServlet {
 
     private static final int PAGE_SIZE = 10;
-    private final productDao dao = new productDaoImpl();
+    private final ProductDao dao = new ProductDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -70,13 +76,25 @@ public class ProductsServlet extends HttpServlet {
         List<Product> all      = dao.fetchAllProducts();
         List<Product> filtered = applyFilters(all, search, category);
 
-        // Derive distinct categories from all products (preserving insertion order)
+        // Derive distinct categories and count per category
         List<String> categories = new ArrayList<>();
+        Map<String, Integer> categoryCounts = new LinkedHashMap<>();
         for (Product p : all) {
             String cat = p.getCategory();
-            if (cat != null && !cat.isBlank() && !categories.contains(cat)) {
-                categories.add(cat);
+            if (cat != null && !cat.isBlank()) {
+                if (!categories.contains(cat)) categories.add(cat);
+                categoryCounts.merge(cat, 1, Integer::sum);
             }
+        }
+
+        // Stat counts from full list
+        int countActive     = 0, countInactive = 0, countOutOfStock = 0;
+        for (Product p : all) {
+            String st = p.getStatus()       == null ? "" : p.getStatus().toLowerCase();
+            String av = p.getAvailability() == null ? "" : p.getAvailability().toLowerCase();
+            if ("active".equals(st))   countActive++;
+            else                       countInactive++;
+            if (av.contains("out") || av.contains("unavailable")) countOutOfStock++;
         }
 
         int totalCount = filtered.size();
@@ -86,14 +104,19 @@ public class ProductsServlet extends HttpServlet {
         int endIndex   = Math.min(startIndex + PAGE_SIZE, totalCount);
         List<Product> pageList = filtered.subList(startIndex, endIndex);
 
-        req.setAttribute("products",    pageList);
-        req.setAttribute("totalCount",  totalCount);
-        req.setAttribute("currentPage", page);
-        req.setAttribute("totalPages",  totalPages);
-        req.setAttribute("startIndex",  startIndex);
-        req.setAttribute("search",      search);
-        req.setAttribute("category",    category);
-        req.setAttribute("categories",  categories);
+        req.setAttribute("products",       pageList);
+        req.setAttribute("totalCount",     totalCount);
+        req.setAttribute("currentPage",    page);
+        req.setAttribute("totalPages",     totalPages);
+        req.setAttribute("startIndex",     startIndex);
+        req.setAttribute("search",         search);
+        req.setAttribute("category",       category);
+        req.setAttribute("categories",     categories);
+        req.setAttribute("totalProducts",   all.size());
+        req.setAttribute("countActive",     countActive);
+        req.setAttribute("countInactive",   countInactive);
+        req.setAttribute("countOutOfStock", countOutOfStock);
+        req.setAttribute("categoryCounts",  categoryCounts);
         req.getRequestDispatcher("/WEB-INF/views/admin/products.jsp").forward(req, resp);
     }
 

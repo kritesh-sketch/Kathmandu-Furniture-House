@@ -1,7 +1,7 @@
 package com.kathmanduFurniture.controller.servlet.admin;
 
-import com.kathmanduFurniture.dao.admin.dashboardDao;
-import com.kathmanduFurniture.dao.admin.dashboardDaoImpl;
+import com.kathmanduFurniture.dao.admin.DashboardDao;
+import com.kathmanduFurniture.dao.admin.DashboardDaoImpl;
 import com.kathmanduFurniture.entity.user.Order;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -12,14 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Servlet serving the admin dashboard at {@code /admin/dashboard}.
+ * Populates KPI stat cards (revenue, orders, products, customers),
+ * trend percentages, and the recent orders table.
+ */
 @WebServlet(name = "DashboardServlet", value = "/admin/dashboard")
 public class DashboardServlet extends HttpServlet {
 
-    private dashboardDao dashboardDao;
+    private DashboardDao dashboardDao;
 
     @Override
     public void init() throws ServletException {
-        dashboardDao = new dashboardDaoImpl();
+        dashboardDao = new DashboardDaoImpl();
     }
 
     @Override

@@ -92,6 +92,7 @@
                         </svg>
                     </button>
                 </div>
+                <small style="color:#888;font-size:12px;">Min 8 characters, uppercase, number &amp; special character (@$!%*?&amp;)</small>
             </div>
 
             <div class="auth-field">

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="c"  uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <!doctype html>
 <html lang="en">
 <jsp:include page="/WEB-INF/templates/head.jsp">
@@ -19,17 +20,17 @@
 <div class="hero-container">
     <div class="video-column">
         <video class="background-video" autoplay muted loop playsinline>
-            <source src="${pageContext.request.contextPath}/static/videos/hero-video.mp4" type="video/mp4" />
+            <source src="${pageContext.request.contextPath}/static/videos/homeProductDisplayVideo.mp4" type="video/mp4" />
         </video>
     </div>
     <div class="video-column">
         <video class="background-video" autoplay muted loop playsinline>
-            <source src="${pageContext.request.contextPath}/static/videos/hero-video.mp4" type="video/mp4" />
+            <source src="${pageContext.request.contextPath}/static/videos/homeProductDisplayVideo.mp4" type="video/mp4" />
         </video>
     </div>
     <div class="video-column">
         <video class="background-video" autoplay muted loop playsinline>
-            <source src="${pageContext.request.contextPath}/static/videos/hero-video.mp4" type="video/mp4" />
+            <source src="${pageContext.request.contextPath}/static/videos/homeProductDisplayVideo.mp4" type="video/mp4" />
         </video>
     </div>
 
@@ -47,21 +48,21 @@
 <!-- Promotional Features Section -->
 <section class="features-section">
     <div class="feature-card">
-        <img src="${pageContext.request.contextPath}/static/images/athlete_blue_backdrop.png" alt="WNBA 30th Anniversary Collection" class="feature-image" />
+        <img src="${pageContext.request.contextPath}/static/images/user/heritage_wardrobe_banner.png" alt="Heritage Collection" class="feature-image" />
         <div class="feature-card-overlay"></div>
         <div class="feature-content">
-            <p class="feature-subtitle">WNBA 30th Anniversary Collection</p>
+            <p class="feature-subtitle">Heritage Collection</p>
             <h2 class="feature-title">Celebrate History</h2>
-            <a href="#" class="feature-button">Shop</a>
+            <a href="${pageContext.request.contextPath}/user/products" class="feature-button">Shop</a>
         </div>
     </div>
     <div class="feature-card">
-        <img src="${pageContext.request.contextPath}/static/images/model_green_door.png" alt="The Festival Edit" class="feature-image" />
+        <img src="${pageContext.request.contextPath}/static/images/user/modern_living_banner.png" alt="The Modern Living Edit" class="feature-image" />
         <div class="feature-card-overlay"></div>
         <div class="feature-content">
-            <p class="feature-subtitle">The Festival Edit</p>
-            <h2 class="feature-title">Different Stage.<br>Same Standard.</h2>
-            <a href="#" class="feature-button">Shop</a>
+            <p class="feature-subtitle">The Modern Living Edit</p>
+            <h2 class="feature-title">Different Space.<br>Same Standard.</h2>
+            <a href="${pageContext.request.contextPath}/user/products" class="feature-button">Shop</a>
         </div>
     </div>
 </section>
@@ -69,19 +70,19 @@
 <!-- Furniture Theme 3-Column Section -->
 <section class="furniture-section">
     <div class="furniture-card">
-        <img src="${pageContext.request.contextPath}/static/images/girl_on_sofa.png" alt="Living Room with Modern Sofa" class="furniture-image" />
+        <img src="${pageContext.request.contextPath}/static/images/user/girl_on_sofa.png" alt="Living Room with Modern Sofa" class="furniture-image" />
         <div class="furniture-btn-container">
             <a href="${pageContext.request.contextPath}/user/sofas" class="furniture-button">Shop Living Room</a>
         </div>
     </div>
     <div class="furniture-card">
-        <img src="${pageContext.request.contextPath}/static/images/girl_at_desk.png" alt="Chic Modern Dining" class="furniture-image" />
+        <img src="${pageContext.request.contextPath}/static/images/user/girl_at_desk.png" alt="Chic Modern Dining" class="furniture-image" />
         <div class="furniture-btn-container">
             <a href="${pageContext.request.contextPath}/user/tables" class="furniture-button">Shop Dining</a>
         </div>
     </div>
     <div class="furniture-card">
-        <img src="${pageContext.request.contextPath}/static/images/girl_in_bedroom.png" alt="Elegant Modern Bedroom" class="furniture-image" />
+        <img src="${pageContext.request.contextPath}/static/images/user/girl_in_bedroom.png" alt="Elegant Modern Bedroom" class="furniture-image" />
         <div class="furniture-btn-container">
             <a href="${pageContext.request.contextPath}/user/beds" class="furniture-button">Shop Bedroom</a>
         </div>
@@ -100,7 +101,8 @@
             <c:when test="${not empty spotlightProducts}">
                 <c:forEach var="product" items="${spotlightProducts}">
                     <a href="${pageContext.request.contextPath}/user/product-details?id=${product.id}" class="spotlight-item">
-                        <img src="${pageContext.request.contextPath}/static/images/products/${product.image}" alt="${product.productName}">
+                        <img src="${pageContext.request.contextPath}/static/images/${fn:escapeXml(product.image)}"
+                             alt="${fn:escapeXml(product.productName)}">
                         <p>${product.productName}</p>
                     </a>
                 </c:forEach>

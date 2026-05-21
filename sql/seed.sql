@@ -13,12 +13,8 @@ USE kathmandu_furniture;
 DELETE FROM wishlist;
 DELETE FROM cart;
 DELETE FROM sales;
-DELETE FROM job_applications;
-DELETE FROM job_vacancies;
-DELETE FROM offers;
 DELETE FROM feedback;
-DELETE FROM return_orders;
-DELETE FROM orders;
+DELETE FROM orders; 
 DELETE FROM product_colors;
 DELETE FROM products;
 DELETE FROM categories;
@@ -27,11 +23,7 @@ DELETE FROM users;
 ALTER TABLE wishlist         AUTO_INCREMENT = 1;
 ALTER TABLE cart             AUTO_INCREMENT = 1;
 ALTER TABLE sales            AUTO_INCREMENT = 1;
-ALTER TABLE job_applications AUTO_INCREMENT = 1;
-ALTER TABLE job_vacancies    AUTO_INCREMENT = 1;
-ALTER TABLE offers           AUTO_INCREMENT = 1;
 ALTER TABLE feedback         AUTO_INCREMENT = 1;
-ALTER TABLE return_orders    AUTO_INCREMENT = 1;
 ALTER TABLE orders           AUTO_INCREMENT = 1;
 ALTER TABLE product_colors   AUTO_INCREMENT = 1;
 ALTER TABLE products         AUTO_INCREMENT = 1;
@@ -117,19 +109,75 @@ INSERT INTO product_colors (product_id, color_hex) VALUES
 -- Bedside Pair (id=18)
 (18, '#92400E'), (18, '#F5F5F5');
 
--- ── JOB VACANCIES ─────────────────────────────────────────────────────────────
-INSERT INTO job_vacancies (title, department, location, type, description, requirements, salary_min, salary_max, status) VALUES
-('Furniture Sales Executive',  'Sales',      'Kathmandu', 'Full-time',  'Drive in-store and online sales, assist customers in selecting furniture, meet monthly targets.', 'Minimum SLC passed. 1+ year sales experience. Strong communication skills.', 18000, 30000, 'Active'),
-('Interior Design Consultant', 'Design',     'Kathmandu', 'Full-time',  'Provide design consultations, create room layout proposals, collaborate with sales team.',         'Bachelor in Interior Design or related. 2+ years experience. Proficient in AutoCAD.', 25000, 45000, 'Active'),
-('Delivery & Assembly Staff',  'Operations', 'Kathmandu', 'Full-time',  'Deliver and assemble furniture at customer locations, ensure damage-free delivery.',              'SLC passed. Valid driving license. Physically fit. Experience preferred.',             15000, 22000, 'Active'),
-('Social Media Manager',       'Marketing',  'Kathmandu', 'Part-time',  'Manage Instagram, Facebook, TikTok. Create content, run campaigns, track engagement.',           'Proven social media portfolio. Graphic design skills. Knowledge of Meta Ads.',        12000, 20000, 'Active');
+-- ── STORAGE LOCATIONS ─────────────────────────────────────────────────────────
+INSERT INTO storage_locations (zone, rack_number, description, capacity, status) VALUES
+('Warehouse A', 'R-01', 'Large sofas and sectionals',       20, 'Available'),
+('Warehouse A', 'R-02', 'Beds and bed frames',              15, 'Available'),
+('Warehouse A', 'R-03', 'Dining and office tables',         12, 'Available'),
+('Warehouse B', 'R-01', 'Chairs and stools',                30, 'Available'),
+('Warehouse B', 'R-02', 'Decor items and rugs',             50, 'Available'),
+('Warehouse B', 'R-03', 'Wardrobes and cabinets',           10, 'Available');
 
--- ── OFFERS ────────────────────────────────────────────────────────────────────
-INSERT INTO offers (title, event_name, discount_code, discount_type, discount_percent, discount_amount, description, status, start_date, end_date) VALUES
-('Dashain Special',       'Dashain 2081',    'DASHAIN15', 'Percentage', 15.00,    0.00, 'Flat 15% off on all products during Dashain festival.',        'Active',   '2025-10-01', '2025-10-15'),
-('New Year Offer',        'New Year 2082',   'NY2082',    'Percentage', 10.00,    0.00, '10% discount on orders above Rs. 20,000 for New Year.',        'Inactive', '2025-04-13', '2025-04-20'),
-('Flat Rs. 2000 Off',     'Weekend Sale',    'WEEKEND2K', 'Fixed',       0.00, 2000.00, 'Rs. 2,000 off on any single product above Rs. 30,000.',        'Active',   '2025-05-10', '2025-05-31'),
-('Clearance 20%',         'Stock Clearance', 'CLEAR20',   'Percentage', 20.00,    0.00, '20% off on selected Decor & Rugs items during clearance.',     'Expired',  '2025-01-01', '2025-02-28');
+-- ── ORDERS ────────────────────────────────────────────────────────────────────
+-- Normal orders (product_id references products above)
+INSERT INTO orders (customer_id, product_id, full_name, phone_number, order_type,
+                    quantity, total_amount, payment_method, delivery_location,
+                    installation_required, notes, status, order_date) VALUES
+
+-- Delivered
+(2, 1,  'Ram Sharma',  '9800000002', 'Normal', 1, 45000.00, 'Cash on Delivery',
+ 'Kathmandu, Baneshwor-10',     'No',  NULL, 'Delivered',  '2025-01-10 10:30:00'),
+
+-- Shipped
+(3, 5,  'Sita Thapa',  '9800000003', 'Normal', 1, 55000.00, 'Bank Transfer',
+ 'Lalitpur, Pulchowk-03',       'Yes', NULL, 'Shipped',    '2025-02-14 09:15:00'),
+
+-- Processing
+(2, 11, 'Ram Sharma',  '9800000002', 'Normal', 2, 32000.00, 'Cash on Delivery',
+ 'Kathmandu, Thamel-06',        'No',  'Both chairs same colour please', 'Processing', '2025-03-05 14:00:00'),
+
+-- Confirmed
+(3, 14, 'Sita Thapa',  '9800000003', 'Normal', 1, 14000.00, 'eSewa',
+ 'Lalitpur, Sanepa-02',         'No',  NULL, 'Confirmed',  '2025-03-20 11:45:00'),
+
+-- Pending
+(4, 10, 'Bikash Rai',  '9800000004', 'Normal', 1, 24000.00, 'Cash on Delivery',
+ 'Bhaktapur, Suryabinayak-05',  'No',  NULL, 'Pending',    '2025-04-01 08:00:00'),
+
+-- Cancelled
+(2, 2,  'Ram Sharma',  '9800000002', 'Normal', 1, 72000.00, 'Bank Transfer',
+ 'Kathmandu, Baneshwor-10',     'No',  'Out of budget', 'Cancelled', '2025-04-10 16:20:00'),
+
+-- Delivered
+(3, 8,  'Sita Thapa',  '9800000003', 'Normal', 1, 32000.00, 'eSewa',
+ 'Lalitpur, Pulchowk-03',       'Yes', NULL, 'Delivered',  '2025-04-18 10:00:00'),
+
+-- Pending
+(4, 17, 'Bikash Rai',  '9800000004', 'Normal', 1, 48000.00, 'Cash on Delivery',
+ 'Bhaktapur, Suryabinayak-05',  'Yes', 'Please call before delivery', 'Pending', '2025-05-02 13:30:00');
+
+-- Customize orders (product_id NULL, custom fields filled)
+INSERT INTO orders (customer_id, product_id, full_name, phone_number, order_type,
+                    quantity, total_amount, payment_method, delivery_location,
+                    furniture_type, design, material, size, height, width,
+                    budget_range, deadline, installation_required, purpose, notes,
+                    status, order_date) VALUES
+
+(2, NULL, 'Ram Sharma', '9800000002', 'Customize', 1, NULL, 'Bank Transfer',
+ 'Kathmandu, Baneshwor-10',
+ 'Sofa', 'L-Shaped', 'Sheesham Wood', 3, 85.00, 240.00,
+ '60000-80000', '3 weeks', 'Yes',
+ 'Living room corner placement',
+ 'Dark walnut finish preferred, fabric in dark grey',
+ 'Confirmed', '2025-03-12 10:00:00'),
+
+(3, NULL, 'Sita Thapa', '9800000003', 'Customize', 1, NULL, 'eSewa',
+ 'Lalitpur, Pulchowk-03',
+ 'Study Desk', 'Minimalist with bookshelf', 'Maple Wood', NULL, 75.00, 150.00,
+ '25000-35000', '2 weeks', 'No',
+ 'Home office setup',
+ 'Need cable management tray underneath',
+ 'Pending', '2025-05-10 09:30:00');
 
 -- ── FEEDBACK ──────────────────────────────────────────────────────────────────
 INSERT INTO feedback (user_name, email, subject, message, status) VALUES

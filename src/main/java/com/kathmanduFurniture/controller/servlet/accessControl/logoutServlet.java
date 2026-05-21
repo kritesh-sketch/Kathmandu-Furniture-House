@@ -13,17 +13,21 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
+/**
+ * Handles logout for both users and admins at {@code /logout}.
+ * Invalidates the current session, removes the contact cookie,
+ * and redirects to the login page.
+ */
 @WebServlet("/logout")
-public class logoutServlet extends HttpServlet {
+public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
             throws ServletException, IOException {
+
         SessionUtil.invalidateSession(request);
-
         CookieUtil.deleteCookie(response, "contactValue");
-
         response.sendRedirect(request.getContextPath() + "/login");
     }
 }

@@ -4,6 +4,7 @@ import com.kathmanduFurniture.dao.user.UserDao;
 import com.kathmanduFurniture.dao.user.UserDaoImpl;
 import com.kathmanduFurniture.entity.user.User;
 import com.kathmanduFurniture.utils.PasswordUtil;
+import com.kathmanduFurniture.utils.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -46,6 +47,13 @@ public class RegisterServlet extends HttpServlet {
             phone     == null || phone.trim().isEmpty()      ||
             password  == null || password.trim().isEmpty()) {
             request.setAttribute("error", "Please fill in all required fields.");
+            repopulate(request, firstName, lastName, email, phone, dob, gender);
+            request.getRequestDispatcher("/WEB-INF/views/user/join-us.jsp").forward(request, response);
+            return;
+        }
+
+        if (!ValidationUtil.isValidPassword(password)) {
+            request.setAttribute("error", "Password must be at least 8 characters and include an uppercase letter, a number, and a special character (@$!%*?&).");
             repopulate(request, firstName, lastName, email, phone, dob, gender);
             request.getRequestDispatcher("/WEB-INF/views/user/join-us.jsp").forward(request, response);
             return;

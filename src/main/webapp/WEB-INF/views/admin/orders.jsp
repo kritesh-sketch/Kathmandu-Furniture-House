@@ -57,7 +57,7 @@
           <div class="search-wrap">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" name="search" class="search-input"
-                   placeholder="Search…" value="${fn:escapeXml(search)}" />
+                   placeholder="Search..." value="${fn:escapeXml(search)}" />
             <div class="search-divider"></div>
             <select name="searchBy" class="searchby-select" onchange="this.form.submit()">
               <option value="name"    ${searchBy == 'name'    ? 'selected':''}>Name</option>

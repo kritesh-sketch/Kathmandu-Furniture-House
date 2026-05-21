@@ -1,6 +1,7 @@
-﻿<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c"   uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn"  uri="jakarta.tags.functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html lang="en">
 <jsp:include page="/WEB-INF/templates/head.jsp">
@@ -11,80 +12,139 @@
     <jsp:param name="footerCssFile" value="footer" />
 </jsp:include>
 
-<link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/user/global.css" />
-
 <body>
 <jsp:include page="/WEB-INF/templates/user/header.jsp" />
 
 <div class="cart-page">
-    <h1 class="cart-title">Your Cart (${fn:length(cartItems)} item${fn:length(cartItems) != 1 ? 's' : ''})</h1>
+
+    <%-- Progress Stepper --%>
+    <div class="cart-stepper">
+        <div class="step active">
+            <div class="step-circle">1</div>
+            <span>Cart</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-circle">2</div>
+            <span>Checkout</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-circle">3</div>
+            <span>Payment</span>
+        </div>
+    </div>
 
     <c:choose>
         <c:when test="${not empty cartItems}">
             <div class="cart-layout">
 
-                <%-- Cart Items --%>
-                <div class="cart-items">
+                <%-- Left: Cart Items --%>
+                <div class="cart-items-section">
+                    <div class="cart-items-header">
+                        <h2 class="cart-section-title">
+                            Shopping Cart
+                            <span class="cart-count">${fn:length(cartItems)} item${fn:length(cartItems) != 1 ? 's' : ''}</span>
+                        </h2>
+                    </div>
+
                     <c:forEach var="item" items="${cartItems}">
                         <div class="cart-item">
-                            <a href="${pageContext.request.contextPath}/user/product-details?id=${item.product.id}" class="cart-item-img">
-                                <img src="${pageContext.request.contextPath}/static/images/products/${item.product.image}"
-                                     alt="${fn:escapeXml(item.product.productName)}"
-                                     onerror="this.src='${pageContext.request.contextPath}/static/images/placeholder.png'"/>
+                            <a href="${pageContext.request.contextPath}/user/product-details?id=${item.product.id}" class="cart-item-img-wrap">
+                                <img src="${pageContext.request.contextPath}/static/images/${fn:escapeXml(item.product.image)}"
+                                     alt="${fn:escapeXml(item.product.productName)}" />
                             </a>
 
-                            <div class="cart-item-info">
-                                <a class="cart-item-name" href="${pageContext.request.contextPath}/user/product-details?id=${item.product.id}">
-                                    <c:out value="${item.product.productName}"/>
-                                </a>
-                                <span class="cart-item-cat"><c:out value="${item.product.category}"/></span>
-                                <span class="cart-item-price">Rs. <c:out value="${item.product.price}"/> each</span>
-                            </div>
-
-                            <div class="cart-item-actions">
-                                <%-- Quantity update --%>
-                                <form class="cart-qty-form" method="post" action="${pageContext.request.contextPath}/user/cart">
-                                    <input type="hidden" name="action" value="update"/>
-                                    <input type="hidden" name="productId" value="${item.product.id}"/>
-                                    <div class="cart-qty-row">
-                                        <button type="submit" name="quantity" value="${item.quantity - 1}" class="cart-qty-btn">−</button>
-                                        <span class="cart-qty-display">${item.quantity}</span>
-                                        <button type="submit" name="quantity" value="${item.quantity + 1}" class="cart-qty-btn">+</button>
+                            <div class="cart-item-body">
+                                <div class="cart-item-top">
+                                    <div class="cart-item-meta">
+                                        <a class="cart-item-name" href="${pageContext.request.contextPath}/user/product-details?id=${item.product.id}">
+                                            <c:out value="${item.product.productName}"/>
+                                        </a>
+                                        <span class="cart-item-cat"><c:out value="${item.product.category}"/></span>
                                     </div>
-                                </form>
-                                <%-- Remove --%>
-                                <form method="post" action="${pageContext.request.contextPath}/user/cart">
-                                    <input type="hidden" name="action" value="remove"/>
-                                    <input type="hidden" name="productId" value="${item.product.id}"/>
-                                    <button type="submit" class="cart-remove-btn">Remove</button>
-                                </form>
+                                    <div class="cart-item-price-block">
+                                        <span class="cart-item-subtotal">Rs. <fmt:formatNumber value="${item.subtotal}" pattern="#,##0.00"/></span>
+                                        <span class="cart-item-unit">Rs. <fmt:formatNumber value="${item.product.price}" pattern="#,##0.00"/> each</span>
+                                    </div>
+                                </div>
+
+                                <div class="cart-item-bottom">
+                                    <%-- Quantity stepper --%>
+                                    <form class="cart-qty-form" method="post" action="${pageContext.request.contextPath}/user/cart">
+                                        <input type="hidden" name="action"    value="update"/>
+                                        <input type="hidden" name="productId" value="${item.product.id}"/>
+                                        <div class="cart-qty-row">
+                                            <button type="submit" name="quantity" value="${item.quantity - 1}" class="cart-qty-btn" title="Decrease">−</button>
+                                            <span class="cart-qty-display">${item.quantity}</span>
+                                            <button type="submit" name="quantity" value="${item.quantity + 1}" class="cart-qty-btn" title="Increase">+</button>
+                                        </div>
+                                    </form>
+
+                                    <%-- Remove --%>
+                                    <form method="post" action="${pageContext.request.contextPath}/user/cart">
+                                        <input type="hidden" name="action"    value="remove"/>
+                                        <input type="hidden" name="productId" value="${item.product.id}"/>
+                                        <button type="submit" class="cart-icon-btn" title="Remove item">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </c:forEach>
                 </div>
 
-                <%-- Order Summary --%>
+                <%-- Right: Order Summary --%>
                 <div class="cart-summary">
-                    <h3>Order Summary</h3>
-                    <c:forEach var="item" items="${cartItems}">
+                    <h3 class="summary-title">Order Summary</h3>
+
+                    <div class="summary-rows">
                         <div class="summary-row">
-                            <span><c:out value="${item.product.productName}"/> × ${item.quantity}</span>
-                            <span>Rs. <c:out value="${item.subtotal}"/></span>
+                            <span>Sub Total</span>
+                            <span>Rs. <fmt:formatNumber value="${cartTotal}" pattern="#,##0.00"/></span>
                         </div>
-                    </c:forEach>
-                    <div class="summary-row">
-                        <span>Shipping</span>
-                        <span style="color:#2e7d32;font-weight:600;">Free</span>
+                        <div class="summary-row">
+                            <span>Discount</span>
+                            <span>Rs. 0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tax (VAT 13%)</span>
+                            <span>Rs. <fmt:formatNumber value="${cartTotal * 0.13}" pattern="#,##0.00"/></span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Shipping</span>
+                            <span class="free-label">Free</span>
+                        </div>
                     </div>
-                    <div class="summary-row total">
+
+                    <div class="summary-total">
                         <span>Total</span>
-                        <span>Rs. <c:out value="${cartTotal}"/></span>
+                        <span>Rs. <fmt:formatNumber value="${cartTotal + cartTotal * 0.13}" pattern="#,##0.00"/></span>
                     </div>
-                    <button class="cart-checkout-btn" type="button">Proceed to Checkout</button>
-                    <a class="cart-continue" href="${pageContext.request.contextPath}/user/products">← Continue Shopping</a>
+
+                    <a class="cart-checkout-btn" href="${pageContext.request.contextPath}/user/checkout">
+                        Proceed to Checkout
+                    </a>
+
+                    <div class="summary-delivery">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        Estimated Delivery: 3–7 Business Days
+                    </div>
+
+                    <div class="coupon-section">
+                        <p class="coupon-label">Have a Coupon?</p>
+                        <div class="coupon-row">
+                            <input type="text" class="coupon-input" placeholder="Enter coupon code" />
+                            <button class="coupon-apply-btn">Apply</button>
+                        </div>
+                    </div>
                 </div>
 
             </div>
+
+            <a class="cart-continue" href="${pageContext.request.contextPath}/user/products">← Continue Shopping</a>
+
         </c:when>
         <c:otherwise>
             <div class="cart-empty">
@@ -104,4 +164,3 @@
 <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 </body>
 </html>
-

@@ -32,7 +32,7 @@
           <div class="stat-card">
             <div class="stat-header">
               <div class="icon-box light">
-                <i class="fa-solid fa-bag-shopping"></i> 
+                <i class="fa-solid fa-sack-dollar"></i>
               </div>
               <c:choose>
                 <c:when test="${ordersTrend >= 0}">
@@ -44,7 +44,7 @@
               </c:choose>
             </div>
             <div class="stat-value" id="totalRevenue">
-              <fmt:formatNumber value="${totalRevenue}" type="currency" currencySymbol="$"/>
+              <span class="currency-symbol">₨</span><fmt:formatNumber value="${totalRevenue}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
             </div>
             <div class="stat-label">Total Revenue</div>
           </div>
@@ -130,7 +130,7 @@
                           </div>
                         </td>
                         <td><c:out value="${order.productName}" /></td>
-                        <td><fmt:formatNumber value="${order.amount}" type="currency" currencySymbol="$"/></td>
+                        <td><fmt:formatNumber value="${order.amount}" type="currency" currencySymbol="Rs."/></td>
                         <td>
                           <c:set var="statusClass" value="cancelled" />
                           <c:choose>

@@ -10,7 +10,44 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class verifyUserDaoImpl implements verifyUserDao {
+/**
+ * JDBC implementation of {@link VerifyUserDao}.
+ * Updates user account status and deletes accounts on rejection.
+ */
+public class VerifyUserDaoImpl implements VerifyUserDao {
+
+    @Override
+    public List<User> getAllUsers() {
+        List<User> list = new ArrayList<>();
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            String sql = "SELECT id, firstName, lastName, email, phoneNumber, dob, gender, status, created_at " +
+                         "FROM users WHERE (email IS NULL OR LOWER(email) != 'admin@kathmandufurniture.com') " +
+                         "ORDER BY created_at DESC";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                user.setFullName(rs.getString("firstName") + " " + rs.getString("lastName"));
+                user.setEmail(rs.getString("email"));
+                user.setMobileNumber(rs.getString("phoneNumber"));
+                user.setDob(rs.getString("dob"));
+                user.setGender(rs.getString("gender"));
+                user.setStatus(rs.getString("status"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                list.add(user);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching all users: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(conn);
+        }
+        return list;
+    }
 
     @Override
     public List<User> getPendingUsers() {
@@ -72,6 +109,40 @@ public class verifyUserDaoImpl implements verifyUserDao {
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.out.println("Error rejecting user: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean deactivateUser(int userId) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "UPDATE users SET status = 'Inactive' WHERE id = ?");
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deactivating user: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(conn);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean activateUser(int userId) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(
+                "UPDATE users SET status = 'Active' WHERE id = ?");
+            ps.setInt(1, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("Error activating user: " + e.getMessage());
         } finally {
             DatabaseConnection.closeConnection(conn);
         }

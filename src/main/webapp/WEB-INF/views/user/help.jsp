@@ -40,85 +40,11 @@
         </div>
     </div>
 
-    <%-- FAQ --%>
-    <h2 class="help-section-title">Frequently Asked Questions</h2>
-    <div class="faq-list">
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                How long does delivery take? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                Standard delivery within Kathmandu valley takes 3–5 business days. Outside the valley, delivery may take 7–14 business days depending on location. You will receive a tracking notification once your order is dispatched.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                Can I return or exchange a product? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                Yes, we accept returns within 7 days of delivery provided the item is unused and in its original packaging. Please contact us at info@hammeronline.in to initiate a return. Custom-made furniture is non-returnable.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                Do you offer assembly services? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                Yes, free assembly is included for all furniture purchased within the Kathmandu valley. Our team will contact you to schedule a convenient installation time after delivery.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                What payment methods are accepted? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                We accept cash on delivery, bank transfer, eSewa, Khalti, and all major credit/debit cards. For large orders, EMI options may be available — please contact us for details.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                Do products come with a warranty? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                All our furniture comes with a minimum 1-year warranty against manufacturing defects. Some premium items carry a 3-year warranty. Warranty details are listed on each product page.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                Can I customise furniture dimensions or colour? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                Yes! We offer customisation for most of our furniture lines. Please visit our store or email us with your requirements and we will provide a quote within 2 business days.
-            </div>
-        </div>
-
-        <div class="faq-item">
-            <button class="faq-question" onclick="toggleFaq(this)">
-                How do I track my order? <span class="faq-icon">+</span>
-            </button>
-            <div class="faq-answer">
-                Once your order is dispatched you will receive an SMS and email with a tracking link. You can also log in to your account and visit the Track Your Order section for real-time status updates.
-            </div>
-        </div>
-
-    </div>
 
 </div>
 
 <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 
-<script>
-    function toggleFaq(btn) {
-        var item = btn.parentElement;
-        item.classList.toggle('open');
-    }
-</script>
 
 </body>
 </html>

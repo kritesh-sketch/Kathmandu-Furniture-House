@@ -14,7 +14,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class dashboardDaoImpl implements dashboardDao {
+/**
+ * JDBC implementation of {@link DashboardDao}.
+ * Calculates KPI metrics and month-over-month trend percentages for the dashboard.
+ */
+public class DashboardDaoImpl implements DashboardDao {
 
     // =========================================================
     //                     REVENUE SECTION
@@ -32,8 +36,9 @@ public class dashboardDaoImpl implements dashboardDao {
 
         try {
             conn = DatabaseConnection.getConnection();
-            String sql = "SELECT SUM(s.selling_price * s.quantity_sold) AS total_revenue " +
-                    "FROM sales s";
+            String sql = "SELECT COALESCE(SUM(total_amount), 0) AS total_revenue " +
+                         "FROM orders " +
+                         "WHERE order_type = 'Normal' AND status != 'Cancelled'";
 
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
@@ -63,11 +68,13 @@ public class dashboardDaoImpl implements dashboardDao {
                     "SELECT SUM(s.selling_price * s.quantity_sold) AS total_sales " +
                             "FROM sales s " +
                             "WHERE DATE_FORMAT(s.sale_date, '%Y-%m') = ?";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+            String currentMonth = LocalDate.now().format(formatter);
             PreparedStatement statement = conn.prepareStatement(sql);
-//            statement.setString(1, month);
+            statement.setString(1, currentMonth);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                totalSales = rs.getDouble("totalSales");
+                totalSales = rs.getDouble("total_sales");
             }
 
         } catch (SQLException e) {
@@ -148,7 +155,7 @@ public class dashboardDaoImpl implements dashboardDao {
         double currentOrders  = getOrdersByMonth(currentMonth);
         double previousOrders = getOrdersByMonth(previousMonth);
 
-        if (previousOrders == 0) return 0.0;
+        if (previousOrders == 0) return currentOrders > 0 ? 100.0 : 0.0;
 
         double percentage = ((currentOrders - previousOrders) / previousOrders) * 100;
         return Math.round(percentage * 100.0) / 100.0;
@@ -247,7 +254,7 @@ public class dashboardDaoImpl implements dashboardDao {
         double currentActive  = getActiveProductsByMonth(currentMonth);
         double previousActive = getActiveProductsByMonth(previousMonth);
 
-        if (previousActive == 0) return 0.0;
+        if (previousActive == 0) return currentActive > 0 ? 100.0 : 0.0;
 
         double percentage = ((currentActive - previousActive) / previousActive) * 100;
         return Math.round(percentage * 100.0) / 100.0;
@@ -290,7 +297,7 @@ public class dashboardDaoImpl implements dashboardDao {
     // Returns total count of all customers registered in the system
     @Override
     public int getTotalCustomers() {
-        int total_customer = 0;
+        int totalCustomer = 0;
         Connection conn = null;
 
         try {
@@ -300,7 +307,7 @@ public class dashboardDaoImpl implements dashboardDao {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                total_customer = rs.getInt("total_customers");
+                totalCustomer = rs.getInt("total_customers");
             }
 
         } catch (Exception e) {
@@ -308,7 +315,7 @@ public class dashboardDaoImpl implements dashboardDao {
         } finally {
             DatabaseConnection.closeConnection(conn);
         }
-        return total_customer;
+        return totalCustomer;
     }
 
     // Returns percentage of increase or decrease in new users
@@ -322,7 +329,7 @@ public class dashboardDaoImpl implements dashboardDao {
         double currentUsers  = getUsersByMonth(currentMonth);
         double previousUsers = getUsersByMonth(previousMonth);
 
-        if (previousUsers == 0) return 0.0;
+        if (previousUsers == 0) return currentUsers > 0 ? 100.0 : 0.0;
 
         double percentage = ((currentUsers - previousUsers) / previousUsers) * 100;
         return Math.round(percentage * 100.0) / 100.0;
@@ -372,19 +379,19 @@ public class dashboardDaoImpl implements dashboardDao {
                     "FROM orders o " +
                     "JOIN users u ON o.customer_id = u.id " +
                     "JOIN products p ON o.product_id = p.id " +
-                    "ORDER BY o.id DESC";
+                    "ORDER BY o.id DESC LIMIT 5";
 
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Order oder = new Order();
-                oder.setId(rs.getInt("order_number"));
-                oder.setCustomerName(rs.getString("customer_name"));
-                oder.setProductName(rs.getString("product_name"));
-                oder.setAmount(rs.getDouble("amount"));
-                oder.setStatus(rs.getString("status"));
-                list.add(oder);
+                Order order = new Order();
+                order.setId(rs.getInt("order_number"));
+                order.setCustomerName(rs.getString("customer_name"));
+                order.setProductName(rs.getString("product_name"));
+                order.setAmount(rs.getDouble("amount"));
+                order.setStatus(rs.getString("status"));
+                list.add(order);
             }
 
         } catch (SQLException e) {

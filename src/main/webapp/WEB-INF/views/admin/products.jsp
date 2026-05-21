@@ -33,7 +33,7 @@
       </header>
 
       <%-- Build export URL preserving current filters --%>
-      <c:url var="exportUrl" value="${pageContext.request.contextPath}/admin/products">
+      <c:url var="exportUrl" value="/admin/products">
         <c:param name="export"   value="csv"/>
         <c:param name="search"   value="${search}"/>
         <c:param name="category" value="${category}"/>
@@ -55,7 +55,7 @@
           <div class="search-wrap">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
             <input type="text" name="search" class="search-input"
-                   placeholder="Search products…" value="${fn:escapeXml(search)}" />
+                   placeholder="Search products..." value="${fn:escapeXml(search)}" />
             <button type="submit" class="search-btn" title="Search">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -77,10 +77,9 @@
           <table class="products-table">
             <colgroup>
               <col class="col-no" />
+              <col class="col-img" />
               <col class="col-product" />
               <col class="col-price" />
-              <col class="col-colors" />
-              <col class="col-rating" />
               <col class="col-avail" />
               <col class="col-status" />
               <col class="col-action" />
@@ -88,10 +87,9 @@
             <thead>
               <tr>
                 <th>No</th>
+                <th></th>
                 <th class="th-product">Product</th>
                 <th>Price</th>
-                <th>Colors</th>
-                <th>Rating</th>
                 <th>Availability</th>
                 <th>Status</th>
                 <th></th>
@@ -103,96 +101,67 @@
                   <c:forEach var="p" items="${products}" varStatus="s">
                     <tr>
                       <td class="col-no">${startIndex + s.index + 1}</td>
-                      <td class="td-product">
-                        <div class="prod-cell">
-                          <c:choose>
-                            <c:when test="${not empty p.image}">
-                              <img class="prod-thumb"
-                                   src="${pageContext.request.contextPath}/static/images/${fn:escapeXml(p.image)}"
-                                   alt="${fn:escapeXml(p.productName)}"
-                                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-                              <div class="prod-thumb-placeholder" style="display:none;">
-                                <i class="fa-regular fa-image"></i>
-                              </div>
-                            </c:when>
-                            <c:otherwise>
-                              <div class="prod-thumb-placeholder">
-                                <i class="fa-regular fa-image"></i>
-                              </div>
-                            </c:otherwise>
-                          </c:choose>
-                          <div class="prod-info">
-                            <span class="prod-name"><c:out value="${p.productName}"/></span>
-                            <c:if test="${not empty p.category}">
-                              <span class="prod-cat"><c:out value="${p.category}"/></span>
-                            </c:if>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="price-cell">
-                        <span class="price-currency">Rs.</span><fmt:formatNumber value="${p.price}" pattern="#,##0.00"/>
-                      </td>
-                      <%-- Colors --%>
-                      <td>
+
+                      <%-- Image column --%>
+                      <td class="col-img-cell">
                         <c:choose>
-                          <c:when test="${not empty p.colors}">
-                            <div class="swatches-sm">
+                          <c:when test="${not empty p.image}">
+                            <img class="prod-thumb"
+                                 src="${pageContext.request.contextPath}/static/images/${fn:escapeXml(p.image)}"
+                                 alt="${fn:escapeXml(p.productName)}"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                            <div class="prod-thumb-placeholder" style="display:none;">
+                              <i class="fa-regular fa-image"></i>
+                            </div>
+                          </c:when>
+                          <c:otherwise>
+                            <div class="prod-thumb-placeholder">
+                              <i class="fa-regular fa-image"></i>
+                            </div>
+                          </c:otherwise>
+                        </c:choose>
+                      </td>
+
+                      <%-- Product: name + category + colors --%>
+                      <td class="td-product">
+                        <div class="prod-info">
+                          <span class="prod-name"><c:out value="${p.productName}"/></span>
+                          <c:if test="${not empty p.category}">
+                            <span class="prod-cat"><c:out value="${p.category}"/></span>
+                          </c:if>
+                          <c:if test="${not empty p.colors}">
+                            <div class="swatches-sm" style="margin-top:4px;">
                               <c:forEach var="col" items="${fn:split(p.colors, ',')}">
                                 <span class="color-swatch-sm"
                                       data-color="${fn:trim(col)}"
                                       title="${fn:trim(col)}"></span>
                               </c:forEach>
                             </div>
-                          </c:when>
-                          <c:otherwise><span style="color:var(--t4);font-size:13px;">—</span></c:otherwise>
-                        </c:choose>
+                          </c:if>
+                        </div>
                       </td>
-                      <%-- Rating --%>
-                      <td>
-                        <c:choose>
-                          <c:when test="${p.rating > 0}">
-                            <div style="display:flex;align-items:center;gap:5px;">
-                              <span class="stars stars-sm">
-                                <c:forEach begin="1" end="5" var="i">
-                                  <c:choose>
-                                    <c:when test="${p.rating >= i}">
-                                      <i class="fa-solid fa-star"></i>
-                                    </c:when>
-                                    <c:when test="${p.rating >= i - 0.5}">
-                                      <i class="fa-solid fa-star-half-stroke"></i>
-                                    </c:when>
-                                    <c:otherwise>
-                                      <i class="fa-regular fa-star empty-star"></i>
-                                    </c:otherwise>
-                                  </c:choose>
-                                </c:forEach>
-                              </span>
-                              <span class="rating-num-sm"><fmt:formatNumber value="${p.rating}" pattern="0.0"/></span>
-                            </div>
-                          </c:when>
-                          <c:otherwise><span style="color:var(--t4);font-size:13px;">—</span></c:otherwise>
-                        </c:choose>
+
+                      <%-- Price --%>
+                      <td class="price-cell">
+                        <span class="price-currency">Rs.</span><fmt:formatNumber value="${p.price}" pattern="#,##0.00"/>
                       </td>
+
+                      <%-- Availability --%>
                       <td>
                         <c:choose>
                           <c:when test="${fn:containsIgnoreCase(p.availability, 'in stock') or fn:containsIgnoreCase(p.availability, 'available')}">
-                            <span class="avail-badge in-stock">
-                              <span class="dot"></span><c:out value="${p.availability}"/>
-                            </span>
+                            <span class="avail-badge avail-in"><c:out value="${p.availability}"/></span>
                           </c:when>
                           <c:when test="${fn:containsIgnoreCase(p.availability, 'out') or fn:containsIgnoreCase(p.availability, 'unavailable')}">
-                            <span class="avail-badge out-stock">
-                              <span class="dot"></span><c:out value="${p.availability}"/>
-                            </span>
+                            <span class="avail-badge avail-out"><c:out value="${p.availability}"/></span>
                           </c:when>
                           <c:otherwise>
-                            <span class="avail-badge other">
-                              <span class="dot"></span>
-                              <c:out value="${not empty p.availability ? p.availability : '—'}"/>
-                            </span>
+                            <span class="avail-badge avail-other"><c:out value="${not empty p.availability ? p.availability : '—'}"/></span>
                           </c:otherwise>
                         </c:choose>
                       </td>
+
+                      <%-- Status --%>
                       <td>
                         <c:choose>
                           <c:when test="${fn:toLowerCase(p.status) == 'active'}">
@@ -205,10 +174,12 @@
                           </c:otherwise>
                         </c:choose>
                       </td>
+
+                      <%-- Action --%>
                       <td>
-                        <a href="${pageContext.request.contextPath}/admin/products?id=${p.id}"
-                           class="view-btn">
-                          <i class="fa-regular fa-eye"></i> View
+                        <a href="${pageContext.request.contextPath}/admin/product-form?id=${p.id}"
+                           class="edit-btn-sm" title="Edit Product">
+                          <i class="fa-solid fa-pen-to-square"></i>
                         </a>
                       </td>
                     </tr>
@@ -216,7 +187,7 @@
                 </c:when>
                 <c:otherwise>
                   <tr>
-                    <td colspan="8" class="prod-empty">
+                    <td colspan="6" class="prod-empty">
                       <i class="fa-solid fa-box-open"></i>
                       <c:choose>
                         <c:when test="${empty search and category == 'all'}">
@@ -235,12 +206,12 @@
         </div>
 
         <%-- Pagination links --%>
-        <c:url var="prevUrl" value="${pageContext.request.contextPath}/admin/products">
+        <c:url var="prevUrl" value="/admin/products">
           <c:param name="search"   value="${search}"/>
           <c:param name="category" value="${category}"/>
           <c:param name="page"     value="${currentPage - 1}"/>
         </c:url>
-        <c:url var="nextUrl" value="${pageContext.request.contextPath}/admin/products">
+        <c:url var="nextUrl" value="/admin/products">
           <c:param name="search"   value="${search}"/>
           <c:param name="category" value="${category}"/>
           <c:param name="page"     value="${currentPage + 1}"/>

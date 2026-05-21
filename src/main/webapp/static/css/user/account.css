@@ -1,0 +1,572 @@
+/* ── User Account Page ── */
+
+.uacc-page {
+    min-height: calc(100vh - 160px);
+    background: #f0f2f5;
+    padding: 40px 32px 80px;
+}
+
+.uacc-grid {
+    max-width: 1160px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* ── Left: Profile Card ── */
+.uacc-profile-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 32px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    position: sticky;
+    top: 20px;
+}
+
+.uacc-avatar-wrap {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+}
+
+.uacc-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 3px solid #e5e7eb;
+}
+
+.uacc-avatar-initials {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #111827;
+    color: #fff;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 1px;
+}
+
+.uacc-avatar-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0,0,0,.48);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity .2s;
+    color: #fff;
+}
+.uacc-avatar-wrap:hover .uacc-avatar-overlay { opacity: 1; }
+
+.uacc-profile-name {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.uacc-profile-badge {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #4f46e5;
+    background: #eef2ff;
+    padding: 3px 14px;
+    border-radius: 20px;
+    margin-bottom: 4px;
+}
+
+.uacc-meta {
+    width: 100%;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.uacc-meta-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 12.5px;
+    color: #6b7280;
+    text-align: left;
+}
+.uacc-meta-row svg { flex-shrink: 0; color: #9ca3af; }
+
+/* ── Side nav buttons ── */
+.uacc-side-nav {
+    width: 100%;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-top: 1px solid #f3f4f6;
+    padding-top: 16px;
+}
+
+.uacc-side-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 9px 12px;
+    border: none;
+    border-radius: 9px;
+    background: none;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s, color .15s;
+}
+.uacc-side-btn:hover { background: #f3f4f6; color: #111827; }
+.uacc-side-btn.active { background: #eef2ff; color: #4f46e5; }
+.uacc-side-btn svg { flex-shrink: 0; }
+
+.uacc-badge {
+    margin-left: auto;
+    background: #4f46e5;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+}
+
+/* ── Right panel area ── */
+.uacc-right { display: flex; flex-direction: column; gap: 20px; }
+
+/* ── Tab visibility ── */
+.uacc-tab { display: none; flex-direction: column; gap: 20px; }
+.uacc-tab.active { display: flex; }
+
+/* ── Stat cards ── */
+.uacc-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+.uacc-stat-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+}
+
+.uacc-stat-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+}
+.si-blue   { background: #eff6ff; color: #3b82f6; }
+.si-amber  { background: #fffbeb; color: #d97706; }
+.si-green  { background: #ecfdf5; color: #059669; }
+.si-purple { background: #f5f3ff; color: #7c3aed; }
+
+.uacc-stat-val {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 20px; font-weight: 800; color: #111827; line-height: 1;
+}
+.uacc-stat-lbl {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 11.5px; color: #9ca3af; margin-top: 3px;
+}
+
+/* ── Panels ── */
+.uacc-panel {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    overflow: hidden;
+}
+
+.uacc-panel-header {
+    padding: 15px 22px;
+    border-bottom: 1px solid #e5e7eb;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.uacc-panel-header svg { color: #4f46e5; }
+
+.uacc-view-all {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #4f46e5;
+    cursor: pointer;
+    padding: 0;
+}
+.uacc-view-all:hover { text-decoration: underline; }
+
+.uacc-panel-body { padding: 24px; }
+
+/* ── Order table ── */
+.uacc-order-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+}
+.uacc-order-table thead tr { border-bottom: 1px solid #f3f4f6; background: #fafbfc; }
+.uacc-order-table th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    white-space: nowrap;
+}
+.uacc-order-table td {
+    padding: 13px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    color: #374151;
+    vertical-align: top;
+}
+.uacc-order-table tbody tr:last-child td { border-bottom: none; }
+.uacc-order-table tbody tr:hover td { background: #fafbfc; }
+
+.uacc-order-id    { font-weight: 700; color: #111827; white-space: nowrap; }
+.uacc-order-product { font-weight: 600; color: #111827; max-width: 180px; }
+.uacc-order-date  { color: #6b7280; white-space: nowrap; }
+.uacc-order-amt   { font-weight: 700; color: #111827; white-space: nowrap; }
+.uacc-order-qty   { text-align: center; }
+.uacc-order-pay   { color: #6b7280; }
+.uacc-order-loc   { display: block; font-size: 11.5px; color: #9ca3af; margin-top: 3px; font-weight: 400; }
+
+/* ── Status badges ── */
+.uacc-status {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+.uacc-status.pending    { background: #fffbeb; color: #d97706; }
+.uacc-status.confirmed  { background: #eff6ff; color: #3b82f6; }
+.uacc-status.processing { background: #f5f3ff; color: #7c3aed; }
+.uacc-status.shipped    { background: #fff7ed; color: #ea580c; }
+.uacc-status.delivered  { background: #ecfdf5; color: #059669; }
+.uacc-status.cancelled  { background: #fef2f2; color: #dc2626; }
+
+/* ── Order type badge ── */
+.uacc-type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 11.5px;
+    font-weight: 700;
+    background: #f3f4f6;
+    color: #6b7280;
+}
+.uacc-type-badge.normal    { background: #eff6ff; color: #3b82f6; }
+.uacc-type-badge.customize { background: #f5f3ff; color: #7c3aed; }
+
+/* ── Order tracking bar ── */
+.uacc-track-row td { padding: 0 16px 14px !important; background: #fafbfc; }
+.uacc-track-row:hover td { background: #fafbfc !important; }
+
+.uacc-track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 8px 0 4px;
+}
+
+.uacc-track-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-width: 72px;
+}
+.uacc-track-step span {
+    font-size: 10.5px;
+    color: #d1d5db;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.uacc-track-step.done span { color: #059669; }
+
+.uacc-track-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #e5e7eb;
+    border: 2px solid #e5e7eb;
+}
+.uacc-track-step.done .uacc-track-dot {
+    background: #059669;
+    border-color: #059669;
+}
+
+.uacc-track-line {
+    flex: 1;
+    height: 2px;
+    background: #e5e7eb;
+    margin-bottom: 18px;
+}
+.uacc-track-line.done { background: #059669; }
+
+/* ── Empty state ── */
+.uacc-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: #9ca3af;
+}
+.uacc-empty i {
+    font-size: 42px;
+    display: block;
+    margin-bottom: 14px;
+    opacity: .35;
+}
+.uacc-empty p {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 14px;
+    margin: 0 0 16px;
+}
+.uacc-shop-btn {
+    display: inline-block;
+    padding: 9px 22px;
+    background: #111827;
+    color: #fff;
+    border-radius: 8px;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+.uacc-shop-btn:hover { background: #374151; }
+
+/* ── Quick links ── */
+.uacc-quick-links {
+    display: flex;
+    gap: 14px;
+}
+.uacc-quick-link {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 14px;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #374151;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    transition: border-color .15s, box-shadow .15s;
+}
+.uacc-quick-link i { font-size: 22px; color: #4f46e5; }
+.uacc-quick-link:hover { border-color: #c7d2fe; box-shadow: 0 2px 8px rgba(79,70,229,.1); }
+
+/* ── Form Grid ── */
+.uacc-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+.uacc-form-grid.single { grid-template-columns: 1fr; }
+.uacc-full { grid-column: 1 / -1; }
+
+.uacc-field-group { display: flex; flex-direction: column; }
+
+.uacc-field-label {
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.uacc-input {
+    height: 42px !important;
+    padding: 0 14px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    font-family: "Andika New Basic", sans-serif !important;
+    font-size: 14px !important;
+    color: #111827 !important;
+    outline: none !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: border-color .2s !important;
+}
+.uacc-input:focus { border-color: #4f46e5 !important; }
+.uacc-input::placeholder { color: #9ca3af !important; }
+
+.uacc-select {
+    height: 42px !important;
+    padding: 0 36px 0 14px !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 12px center !important;
+    font-family: "Andika New Basic", sans-serif !important;
+    font-size: 14px !important;
+    color: #111827 !important;
+    outline: none !important;
+    width: 100% !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+    transition: border-color .2s !important;
+}
+.uacc-select:focus { border-color: #4f46e5 !important; }
+
+.uacc-dob-row { display: flex; gap: 10px; }
+.uacc-dob-row .uacc-select:first-child { flex: 2.5; }
+.uacc-dob-row .uacc-select:not(:first-child) { flex: 1.5; }
+
+/* ── Password wrap ── */
+.uacc-pw-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.uacc-pw-wrap .uacc-input { padding-right: 40px !important; }
+
+.uacc-pw-eye {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #9ca3af;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+.uacc-pw-eye:hover { color: #374151; }
+.uacc-pw-eye svg { width: 16px; height: 16px; }
+
+/* ── Actions ── */
+.uacc-form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.uacc-btn {
+    height: 42px !important;
+    padding: 0 28px !important;
+    background: #111827 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-family: "Andika New Basic", sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 7px !important;
+    transition: background .2s !important;
+}
+.uacc-btn:hover { background: #374151 !important; }
+
+/* ── Toast ── */
+#uaccToast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #111827;
+    color: #fff;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-family: "Andika New Basic", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all .26s ease;
+    z-index: 9999;
+    pointer-events: none;
+}
+#uaccToast.show { opacity: 1; transform: translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) {
+    .uacc-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 960px) {
+    .uacc-grid { grid-template-columns: 1fr; }
+    .uacc-profile-card {
+        flex-direction: row; text-align: left;
+        gap: 20px; padding: 20px;
+        position: static;
+        flex-wrap: wrap;
+    }
+    .uacc-profile-card > * { flex-shrink: 0; }
+    .uacc-meta { margin-top: 4px; }
+    .uacc-side-nav { flex-direction: row; flex-wrap: wrap; border-top: none; padding-top: 0; border-left: 1px solid #f3f4f6; padding-left: 12px; }
+}
+
+@media (max-width: 700px) {
+    .uacc-page { padding: 20px 14px 60px; }
+    .uacc-stats { grid-template-columns: repeat(2, 1fr); }
+    .uacc-form-grid { grid-template-columns: 1fr; }
+    .uacc-profile-card { flex-direction: column; text-align: center; }
+    .uacc-side-nav { flex-direction: row; border-left: none; padding-left: 0; border-top: 1px solid #f3f4f6; padding-top: 12px; }
+    .uacc-quick-links { flex-direction: column; }
+    .uacc-dob-row { flex-direction: column; }
+    .uacc-order-full th:nth-child(3),
+    .uacc-order-full td:nth-child(3),
+    .uacc-order-full th:nth-child(6),
+    .uacc-order-full td:nth-child(6) { display: none; }
+}

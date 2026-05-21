@@ -1,0 +1,50 @@
+/* ============================================================
+   KATHMANDU FURNITURE — Admin Analytics Page CSS
+   ============================================================ */
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0 32px;
+}
+
+.chart-panel .panel-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.chart-panel .panel-header h3 i {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.chart-wrap {
+  position: relative;
+  height: 240px;
+  padding: 8px 0 4px;
+}
+
+.chart-wrap--sm {
+  height: 280px;
+}
+
+@media (max-width: 960px) {
+  .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .charts-grid { padding: 14px 0 24px; gap: 14px; }
+  .chart-wrap     { height: 200px; }
+  .chart-wrap--sm { height: 220px; }
+}
+
+@media (max-width: 480px) {
+  .chart-wrap     { height: 180px; }
+  .chart-wrap--sm { height: 200px; }
+  .chart-panel .panel-header h3 { font-size: 12.5px; }
+}

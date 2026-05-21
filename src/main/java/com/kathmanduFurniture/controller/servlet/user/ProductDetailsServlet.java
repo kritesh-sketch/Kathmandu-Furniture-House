@@ -1,7 +1,10 @@
 package com.kathmanduFurniture.controller.servlet.user;
 
+import com.kathmanduFurniture.dao.admin.OrderDao;
+import com.kathmanduFurniture.dao.admin.OrderDaoImpl;
 import com.kathmanduFurniture.dao.user.ProductDao;
 import com.kathmanduFurniture.dao.user.ProductDaoImpl;
+import com.kathmanduFurniture.entity.user.Order;
 import com.kathmanduFurniture.entity.user.Product;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -16,14 +19,22 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Servlet for the product detail page at {@code /user/product-details}.
+ * GET loads product data and wishlist state for display.
+ * POST handles addToCart, toggleWishlist, and customOrder actions.
+ * Unauthenticated POST requests are redirected to the login page.
+ */
 @WebServlet(name = "ProductDetailsServlet", value = "/user/product-details")
 public class ProductDetailsServlet extends HttpServlet {
 
     private ProductDao productDao;
+    private OrderDao   orderDao;
 
     @Override
     public void init() throws ServletException {
         productDao = new ProductDaoImpl();
+        orderDao   = new OrderDaoImpl();
     }
 
     @Override
@@ -55,12 +66,19 @@ public class ProductDetailsServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Guest users cannot perform cart / wishlist / order actions
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("loggedInUser") == null) {
+            response.sendRedirect(request.getContextPath() + "/login?msg=login");
+            return;
+        }
+
         String action    = request.getParameter("action");
         String idParam   = request.getParameter("productId");
         if (idParam == null) { response.sendRedirect(request.getContextPath() + "/user/products"); return; }
 
         int productId = Integer.parseInt(idParam);
-        HttpSession session = request.getSession(true);
 
         if ("addToCart".equals(action)) {
             int qty = 1;
@@ -82,6 +100,38 @@ public class ProductDetailsServlet extends HttpServlet {
             else wishlist.add(productId);
             session.setAttribute("wishlist", wishlist);
             response.sendRedirect(request.getContextPath() + "/user/product-details?id=" + productId);
+
+        } else if ("customOrder".equals(action)) {
+            Order order = new Order();
+            order.setFullName(request.getParameter("fullName"));
+            order.setPhoneNumber(request.getParameter("phoneNumber"));
+            order.setDeliveryLocation(request.getParameter("deliveryLocation"));
+            order.setFurnitureType(request.getParameter("furnitureType"));
+            order.setMaterial(request.getParameter("material"));
+            order.setDesign(request.getParameter("design"));
+            order.setBudgetRange(request.getParameter("budgetRange"));
+            order.setDeadline(request.getParameter("deadline"));
+            order.setInstallationRequired(request.getParameter("installationRequired"));
+            order.setPaymentMethod(request.getParameter("paymentMethod"));
+            order.setPurpose(request.getParameter("purpose"));
+            order.setNotes(request.getParameter("notes"));
+            order.setOrderType("Customize");
+            order.setId(productId); // reused as product_id in placeOrder
+
+            try {
+                String h = request.getParameter("height");
+                if (h != null && !h.isBlank()) order.setHeight(Double.parseDouble(h));
+                String w = request.getParameter("width");
+                if (w != null && !w.isBlank()) order.setWidth(Double.parseDouble(w));
+                String s = request.getParameter("size");
+                if (s != null && !s.isBlank()) order.setSize(Integer.parseInt(s));
+                String q = request.getParameter("quantity");
+                if (q != null && !q.isBlank()) order.setQuantity(Integer.parseInt(q));
+            } catch (NumberFormatException ignored) {}
+
+            boolean success = orderDao.placeOrder(order);
+            String redirect = request.getContextPath() + "/user/product-details?id=" + productId;
+            response.sendRedirect(redirect + (success ? "&ordered=true" : "&ordered=false"));
         }
     }
 }

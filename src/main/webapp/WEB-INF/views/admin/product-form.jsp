@@ -51,7 +51,7 @@
 
       <!-- ── Form ── -->
       <form method="post" action="${pageContext.request.contextPath}/admin/product-form"
-            id="productForm">
+            id="productForm" enctype="multipart/form-data">
 
         <c:if test="${mode == 'edit'}">
           <input type="hidden" name="id" value="${product.id}" />
@@ -92,9 +92,9 @@
             <div class="form-group">
               <label class="form-label" for="availability">Availability</label>
               <select id="availability" name="availability" class="form-select">
-                <option value="In Stock"       ${fn:toLowerCase(product.availability) == 'in stock'       ? 'selected' : ''}>In Stock</option>
-                <option value="Out of Stock"   ${fn:toLowerCase(product.availability) == 'out of stock'   ? 'selected' : ''}>Out of Stock</option>
-                <option value="Limited Stock"  ${fn:toLowerCase(product.availability) == 'limited stock'  ? 'selected' : ''}>Limited Stock</option>
+                <option value="In Stock"      ${fn:toLowerCase(product.availability) == 'in stock'      ? 'selected' : ''}>In Stock</option>
+                <option value="Out of Stock"  ${fn:toLowerCase(product.availability) == 'out of stock'  ? 'selected' : ''}>Out of Stock</option>
+                <option value="Coming Soon"   ${fn:toLowerCase(product.availability) == 'coming soon'   ? 'selected' : ''}>Coming Soon</option>
               </select>
             </div>
 
@@ -106,12 +106,40 @@
               </select>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" for="image">Image Filename</label>
-              <input type="text" id="image" name="image" class="form-input"
-                     placeholder="e.g. dining-table.jpg"
-                     value="<c:out value='${product.image}'/>" />
-              <span class="form-hint">Filename only — file must exist in /static/images/</span>
+            <div class="form-group full-width">
+              <label class="form-label">Product Image</label>
+              <input type="hidden" name="existingImage" value="<c:out value='${product.image}'/>"/>
+              <div class="pf-upload-zone" id="pfUploadZone">
+                <div class="pf-upload-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <p class="pf-upload-title">Click to upload or drag &amp; drop</p>
+                <p class="pf-upload-sub">JPG, PNG, WEBP &mdash; max 5 MB</p>
+                <input type="file" id="image" name="image"
+                       accept=".jpg,.jpeg,.png,.webp"
+                       class="pf-upload-input"
+                       onchange="previewProductImage(this)"/>
+              </div>
+              <div class="pf-img-preview-row" id="pfImgPreviewRow"
+                   style="${mode == 'edit' and not empty product.image ? '' : 'display:none;'}">
+                <img id="imgPreview"
+                     src="${mode == 'edit' and not empty product.image
+                           ? pageContext.request.contextPath.concat('/static/images/').concat(product.image)
+                           : ''}"
+                     alt="Preview" class="pf-preview-img"/>
+                <div class="pf-preview-info">
+                  <span class="pf-preview-name" id="pfPreviewName">
+                    <c:choose>
+                      <c:when test="${mode == 'edit' and not empty product.image}">Current image</c:when>
+                      <c:otherwise>No file chosen</c:otherwise>
+                    </c:choose>
+                  </span>
+                  <c:if test="${mode == 'edit' and not empty product.image}">
+                    <span class="form-hint">Upload a new file to replace it.</span>
+                  </c:if>
+                  <button type="button" class="pf-remove-img" onclick="removeProductImage()">
+                    <i class="fa-solid fa-xmark"></i> Remove
+                  </button>
+                </div>
+              </div>
             </div>
 
           </div>
@@ -121,41 +149,37 @@
         <div class="form-card">
           <div class="form-section-title">Colors</div>
           <div class="color-pickers-row" id="colorPickersRow">
-            <!-- injected by JS -->
             <button type="button" class="add-color-btn" id="addColorBtn"
                     onclick="addColorPicker('#888888')">
               <i class="fa-solid fa-plus"></i> Add Color
             </button>
           </div>
-          <%-- hidden field carries comma-separated hex values to the server --%>
           <input type="hidden" id="colorsHidden" name="colors"
                  value="<c:out value='${product.colors}'/>" />
         </div>
 
-        <!-- Rating -->
+        <!-- Dimensions -->
         <div class="form-card">
-          <div class="form-section-title">Rating</div>
-          <div class="star-input-row">
-            <div class="star-btns" id="starBtns">
-              <button type="button" class="star-btn" data-val="1"><i class="fa-solid fa-star"></i></button>
-              <button type="button" class="star-btn" data-val="2"><i class="fa-solid fa-star"></i></button>
-              <button type="button" class="star-btn" data-val="3"><i class="fa-solid fa-star"></i></button>
-              <button type="button" class="star-btn" data-val="4"><i class="fa-solid fa-star"></i></button>
-              <button type="button" class="star-btn" data-val="5"><i class="fa-solid fa-star"></i></button>
+          <div class="form-section-title">Dimensions (cm)</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label" for="lengthCm">Length</label>
+              <input type="number" id="lengthCm" name="lengthCm" class="form-input"
+                     placeholder="e.g. 120" step="0.1" min="0"
+                     value="${not empty dimParts[0] ? dimParts[0] : ''}" />
             </div>
-            <input type="number" id="ratingInput" name="rating" class="rating-num-input"
-                   min="0" max="5" step="0.5"
-                   value="${product.rating > 0 ? product.rating : '0'}" />
-            <span class="rating-hint">0.0 – 5.0 &nbsp;(click a star or type)</span>
-          </div>
-        </div>
-
-        <!-- Specifications -->
-        <div class="form-card">
-          <div class="form-section-title">Specifications</div>
-          <div class="form-group">
-            <textarea id="specifications" name="specifications" class="form-textarea"
-                      rows="6" placeholder="Enter product specifications, materials, dimensions…"><c:out value="${product.specifications}"/></textarea>
+            <div class="form-group">
+              <label class="form-label" for="breadthCm">Breadth</label>
+              <input type="number" id="breadthCm" name="breadthCm" class="form-input"
+                     placeholder="e.g. 85" step="0.1" min="0"
+                     value="${not empty dimParts[1] ? dimParts[1] : ''}" />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="heightCm">Height</label>
+              <input type="number" id="heightCm" name="heightCm" class="form-input"
+                     placeholder="e.g. 90" step="0.1" min="0"
+                     value="${not empty dimParts[2] ? dimParts[2] : ''}" />
+            </div>
           </div>
         </div>
 
@@ -227,29 +251,44 @@
       }
     })();
 
-    /* ── Star rating ── */
-    var ratingInput = document.getElementById("ratingInput");
-    var starBtns    = Array.from(document.querySelectorAll(".star-btn"));
+    /* ── Product image upload zone ── */
+    var zone      = document.getElementById("pfUploadZone");
+    var previewRow = document.getElementById("pfImgPreviewRow");
+    var previewName = document.getElementById("pfPreviewName");
+    var fileInput = document.getElementById("image");
 
-    function paintStars(val) {
-      starBtns.forEach(function(btn) {
-        btn.classList.toggle("lit", btn.dataset.val <= val);
-      });
+    zone.addEventListener("click", function() { fileInput.click(); });
+    zone.addEventListener("dragover", function(e) { e.preventDefault(); zone.classList.add("drag-over"); });
+    zone.addEventListener("dragleave", function()  { zone.classList.remove("drag-over"); });
+    zone.addEventListener("drop", function(e) {
+      e.preventDefault();
+      zone.classList.remove("drag-over");
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        previewProductImage(fileInput);
+      }
+    });
+
+    function previewProductImage(input) {
+      if (!input.files || !input.files[0]) return;
+      var file = input.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("imgPreview").src = e.target.result;
+        if (previewName) previewName.textContent = file.name;
+        zone.style.display = "none";
+        previewRow.style.display = "flex";
+      };
+      reader.readAsDataURL(file);
     }
 
-    starBtns.forEach(function(btn) {
-      btn.addEventListener("click", function() {
-        ratingInput.value = btn.dataset.val;
-        paintStars(btn.dataset.val);
-      });
-    });
-
-    ratingInput.addEventListener("input", function() {
-      paintStars(parseFloat(this.value) || 0);
-    });
-
-    /* Initial paint */
-    paintStars(parseFloat(ratingInput.value) || 0);
+    function removeProductImage() {
+      fileInput.value = "";
+      document.getElementById("imgPreview").src = "";
+      if (previewName) previewName.textContent = "No file chosen";
+      previewRow.style.display = "none";
+      zone.style.display = "flex";
+    }
   </script>
 </body>
 </html>

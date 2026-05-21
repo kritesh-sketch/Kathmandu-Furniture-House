@@ -1,19 +1,30 @@
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!-- Site Navigation Header -->
 <header class="site-header" id="siteHeader">
   <div class="top-nav">
     <div class="top-nav-links">
       <a href="https://www.google.com/maps/search/kathmansu+furniture/@28.1363018,83.4438245,9z?entry=ttu&g_ep=EgoyMDI2MDQyOC4wIKXMDSoASAFQAw%3D%3D"
         target="_blank">Find a Store</a>
-      <a href="${pageContext.request.contextPath}/user/help">Help</a>
-      <a href="${pageContext.request.contextPath}/user/join-us">Join Us</a>
-      <a href="${pageContext.request.contextPath}/user/login">Sign In</a>
+<c:choose>
+        <c:when test="${not empty sessionScope.loggedInUser}">
+          <a href="${pageContext.request.contextPath}/user/account" style="color:#555;">Hello, <strong><c:out value="${sessionScope.loggedInUser.firstName}"/></strong></a>
+          <a href="${pageContext.request.contextPath}/user/logout">Sign Out</a>
+        </c:when>
+        <c:otherwise>
+          <a href="${pageContext.request.contextPath}/join-us">Join Us</a>
+          <a href="${pageContext.request.contextPath}/login">Sign In</a>
+        </c:otherwise>
+      </c:choose>
     </div>
   </div>
   <nav class="main-nav">
     <a href="${pageContext.request.contextPath}/user/home" class="site-logo">
-      <img src="${pageContext.request.contextPath}/static/images/logo-2.png" alt="Site Logo">
+      <img src="${pageContext.request.contextPath}/static/images/kathmanduFurnitureLogo.png" alt="Site Logo">
     </a>
     <div class="nav-links">
+      <div class="nav-item">
+        <a href="${pageContext.request.contextPath}/user/products">All Products</a>
+      </div>
       <div class="nav-item">
         <a href="${pageContext.request.contextPath}/user/sofas">Sofas &amp; Seating</a>
       </div>
@@ -32,16 +43,19 @@
       <div class="nav-item">
         <a href="${pageContext.request.contextPath}/user/storage">Storage &amp; Cabinets</a>
       </div>
+      <div class="nav-item">
+        <a href="${pageContext.request.contextPath}/user/request">Custom Request</a>
+      </div>
     </div>
     <div class="nav-actions">
       <div class="search-spacer-left"></div>
-      <div class="search-container">
+      <form class="search-container" method="get" action="${pageContext.request.contextPath}/user/search" id="searchForm">
         <svg viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="7" />
           <line x1="21" y1="21" x2="16" y2="16" />
         </svg>
-        <input type="text" placeholder="Search" id="searchInput" />
-      </div>
+        <input type="text" name="q" placeholder="Search products..." id="searchInput" autocomplete="off"/>
+      </form>
       <div class="search-spacer-right"></div>
       <a href="${pageContext.request.contextPath}/user/wishlist" class="nav-action-btn" aria-label="Wishlist">
         <svg viewBox="0 0 24 24">

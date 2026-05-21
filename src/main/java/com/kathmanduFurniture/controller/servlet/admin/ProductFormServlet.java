@@ -1,21 +1,25 @@
 package com.kathmanduFurniture.controller.servlet.admin;
 
-import com.kathmanduFurniture.dao.admin.productDao;
-import com.kathmanduFurniture.dao.admin.productDaoImpl;
+import com.kathmanduFurniture.dao.admin.ProductDao;
+import com.kathmanduFurniture.dao.admin.ProductDaoImpl;
 import com.kathmanduFurniture.entity.user.Product;
+import com.kathmanduFurniture.utils.ImageUtil;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 import java.io.IOException;
 
 @WebServlet(name = "ProductFormServlet", value = "/admin/product-form")
+@MultipartConfig(maxFileSize = 5 * 1024 * 1024)
 public class ProductFormServlet extends HttpServlet {
 
-    private final productDao dao = new productDaoImpl();
+    private final ProductDao dao = new ProductDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -32,12 +36,20 @@ public class ProductFormServlet extends HttpServlet {
                 }
                 req.setAttribute("product", product);
                 req.setAttribute("mode", "edit");
+                // Pre-split dimensions (L|B|H) so JSP can populate the 3 separate inputs
+                String[] parts = new String[]{"", "", ""};
+                if (product.getDimensions() != null && product.getDimensions().contains("|")) {
+                    String[] raw = product.getDimensions().split("\\|", -1);
+                    for (int i = 0; i < Math.min(raw.length, 3); i++) parts[i] = raw[i].trim();
+                }
+                req.setAttribute("dimParts", parts);
             } catch (NumberFormatException e) {
                 resp.sendRedirect(req.getContextPath() + "/admin/products");
                 return;
             }
         } else {
             req.setAttribute("mode", "add");
+            req.setAttribute("dimParts", new String[]{"", "", ""});
         }
         req.getRequestDispatcher("/WEB-INF/views/admin/product-form.jsp").forward(req, resp);
     }
@@ -52,24 +64,32 @@ public class ProductFormServlet extends HttpServlet {
         try { price = Double.parseDouble(req.getParameter("price")); }
         catch (Exception ignored) {}
 
-        double rating = 0;
+        // Handle image upload
+        String imagePath = null;
         try {
-            rating = Double.parseDouble(req.getParameter("rating"));
-            rating = Math.max(0.0, Math.min(5.0, rating));
+            Part imagePart = req.getPart("image");
+            imagePath = ImageUtil.uploadImage(imagePart, getServletContext(), "products");
         } catch (Exception ignored) {}
 
-        String specs = req.getParameter("specifications");
+        if (imagePath == null) {
+            imagePath = param(req, "existingImage", "");
+        }
+
+        // Build pipe-separated dimensions string from the 3 separate inputs
+        String lengthCm  = param(req, "lengthCm",  "");
+        String breadthCm = param(req, "breadthCm", "");
+        String heightCm  = param(req, "heightCm",  "");
+        String dimensions = lengthCm + "|" + breadthCm + "|" + heightCm;
 
         Product product = new Product();
         product.setProductName(param(req, "productName", ""));
-        product.setImage(param(req, "image", ""));
+        product.setImage(imagePath);
         product.setPrice(price);
         product.setAvailability(param(req, "availability", "In Stock"));
-        product.setSpecifications(specs != null ? specs : "");
         product.setStatus(param(req, "status", "Active"));
         product.setCategory(param(req, "category", ""));
         product.setColors(param(req, "colors", ""));
-        product.setRating(rating);
+        product.setDimensions(dimensions);
 
         boolean isEdit = idParam != null && !idParam.isBlank();
         boolean success;
@@ -90,4 +110,5 @@ public class ProductFormServlet extends HttpServlet {
         String v = req.getParameter(name);
         return (v != null && !v.isBlank()) ? v.trim() : def;
     }
+
 }

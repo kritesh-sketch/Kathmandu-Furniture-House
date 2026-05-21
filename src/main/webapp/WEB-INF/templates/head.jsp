@@ -9,10 +9,11 @@
     <link
             href="https://fonts.googleapis.com/css2?family=Andika+New+Basic:wght@400;600;700&family=Bellota:wght@400;700&display=swap"
             rel="stylesheet" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.currentCssFile}.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.headerCssFile}.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.footerCssFile}.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/user/global.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.currentCssFile}.css?v=5" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.headerCssFile}.css?v=5" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/${param.pageFolder}/${param.footerCssFile}.css?v=5" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/user/global.css?v=5" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <style>body,html{background-color:#fff!important;color:#111;font-size:16px;font-weight:500}</style>
 </head>
 
